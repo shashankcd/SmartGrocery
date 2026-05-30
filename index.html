@@ -3,250 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Smart Grocery V2.1</title>
+<title>Smart Grocery</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
-<style>
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{width:100%;height:100%;overflow:hidden}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:#f4f7f4;color:#1a2e1a;font-size:15px}
-:root{--green:#2d6a4f;--gl:#40916c;--gp:#d8f3dc;--gb:#f0faf2;--acc:#52b788;--red:#e63946;--t3:#7a9e7e;--bdr:#c8e6c9;--sh:0 2px 10px rgba(45,106,79,0.1)}
-.app{width:100%;height:100%;display:flex;flex-direction:column;background:#fff}
-header{background:var(--green);color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:var(--sh)}
-.logo-wrap{display:flex;align-items:center;gap:8px;flex:1}
-.logo{width:32px;height:32px;background:rgba(255,255,255,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px}
-.hdr-title{font-size:16px;font-weight:700}
-.hdr-sub{font-size:10px;opacity:0.8}
-.lang-sw{display:flex;gap:2px;background:rgba(255,255,255,0.15);border-radius:6px;padding:2px}
-.lb{padding:2px 6px;border-radius:4px;border:none;background:transparent;color:rgba(255,255,255,0.7);font-size:10px;font-weight:600;cursor:pointer;transition:all 0.15s}
-.lb.active{background:rgba(255,255,255,0.9);color:var(--green)}
-.fam-badge{background:rgba(255,255,255,0.15);border-radius:6px;padding:3px 7px;font-size:10px;cursor:pointer;border:none;color:#fff}
-nav{display:flex;background:#fff;border-bottom:1px solid var(--bdr);overflow-x:auto;flex-shrink:0}
-.nb{flex:1;min-width:48px;padding:8px 2px 6px;border:none;background:none;font-size:9px;color:var(--t3);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;transition:color 0.15s;position:relative}
-.nb i{font-size:16px}
-.nb.active{color:var(--green);border-bottom:2.5px solid var(--green)}
-.pages{flex:1;display:flex;overflow:hidden}
-.page{display:none;flex:1;overflow-y:auto;padding:12px;flex-direction:column}
-.page.active{display:flex}
-.card{background:#fff;border:1px solid var(--bdr);border-radius:12px;padding:12px;margin-bottom:8px;box-shadow:var(--sh)}
-.card-flat{background:var(--gb);border-radius:10px;padding:10px;margin-bottom:6px}
-.fab{position:fixed;bottom:70px;right:14px;width:48px;height:48px;border-radius:50%;background:var(--green);color:#fff;border:none;font-size:24px;cursor:pointer;box-shadow:0 4px 16px rgba(45,106,79,0.35);display:flex;align-items:center;justify-content:center;z-index:200;transition:transform 0.15s}
-.fab:active{transform:scale(0.92)}
-.btn{display:inline-flex;align-items:center;gap:4px;padding:6px 11px;border-radius:6px;border:1.5px solid var(--bdr);background:#fff;color:var(--green);font-size:12px;font-weight:500;cursor:pointer;transition:all 0.15s}
-.btn:active{background:var(--gp)}
-.btn-p{background:var(--green);color:#fff;border-color:var(--green)}
-.btn-sm{padding:4px 8px;font-size:11px}
-.btn-r{color:var(--red);border-color:#ffc1c5}
-.inp{width:100%;padding:8px 10px;border:1.5px solid var(--bdr);border-radius:6px;font-size:13px;color:#1a2e1a;outline:none;background:#fff}
-.inp:focus{border-color:var(--green)}
-.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:500;align-items:flex-end;justify-content:center}
-.mo.open{display:flex}
-.ms{background:#fff;border-radius:20px 20px 0 0;padding:18px 14px 28px;width:100%;max-width:430px;max-height:88vh;overflow-y:auto;position:relative}
-.ms h3{font-size:16px;font-weight:700;margin-bottom:12px}
-.mc{position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:50%;background:var(--gb);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--t3)}
-.fr{margin-bottom:9px}
-.fr label{display:block;font-size:11px;font-weight:600;color:var(--t3);margin-bottom:3px}
-.pin-wrap{display:flex;gap:8px;justify-content:center;margin:12px 0}
-.pin-box{width:48px;height:52px;border:2px solid var(--bdr);border-radius:8px;font-size:22px;text-align:center;outline:none}
-.pin-box:focus{border-color:var(--green)}
-.ir{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f5f5f5}
-.ir:last-child{border-bottom:none}
-.ick{width:22px;height:22px;border-radius:50%;border:2px solid var(--acc);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all 0.2s;font-size:11px}
-.ick.on{background:var(--green);border-color:var(--green);color:#fff}
-.ii{flex:1;min-width:0}
-.iname{font-size:13px;font-weight:500}
-.imeta{font-size:11px;color:var(--t3);margin-top:1px}
-.ir.done .iname{text-decoration:line-through;color:var(--t3)}
-.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:#1a2e1a;color:#fff;padding:9px 18px;border-radius:18px;font-size:12px;opacity:0;z-index:1000;transition:all 0.3s;pointer-events:none;white-space:nowrap}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.ob-ov{position:fixed;inset:0;background:linear-gradient(135deg,#2d6a4f,#40916c);z-index:900;display:flex;align-items:center;justify-content:center;padding:16px}
-.ob-card{background:#fff;border-radius:20px;padding:24px 18px;width:100%;max-width:340px;text-align:center}
-.lo{display:flex;flex-direction:column;align-items:center;gap:3px;padding:12px 8px;border:2px solid var(--bdr);border-radius:12px;cursor:pointer;transition:all 0.15s;flex:1}
-.lo.sel{border-color:var(--green);background:var(--gb)}
-.emp{text-align:center;padding:28px 14px;color:var(--t3)}
-.emp i{font-size:38px;color:var(--bdr);display:block;margin-bottom:8px}
-.fb{display:flex;align-items:center;justify-content:space-between}
-.rf{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.quick-mark-btn{background:#ffd700;color:#1a2e1a;border:none;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:600;cursor:pointer}
-.quick-mark-btn:active{opacity:0.8}
-</style>
-</head>
-<body>
-<div class="app" id="app" style="display:none">
-<header>
-  <div class="logo-wrap">
-    <div class="logo">🛒</div>
-    <div><div class="hdr-title" id="hdr-t">Smart Grocery</div><div class="hdr-sub" id="hdr-s">Family Shopping</div></div>
-  </div>
-  <div style="display:flex;align-items:center;gap:5px">
-    <div class="lang-sw">
-      <button class="lb" onclick="setLang('hi')" id="lb-hi">हि</button>
-      <button class="lb" onclick="setLang('mr')" id="lb-mr">म</button>
-      <button class="lb" onclick="setLang('en')" id="lb-en">EN</button>
-    </div>
-    <button class="fam-badge" onclick="showMembers()" id="fam-badge">👨‍👩‍👧 <span id="fam-name">...</span></button>
-  </div>
-</header>
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, addDoc, updateDoc, deleteDoc, query, orderBy, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-<nav>
-  <button class="nb active" onclick="showPage('list',this)"><i class="ti ti-list-check"></i>List</button>
-  <button class="nb" onclick="showPage('items',this)"><i class="ti ti-category"></i>Items</button>
-  <button class="nb" onclick="showPage('trips',this)"><i class="ti ti-shopping-bag"></i>Trips</button>
-  <button class="nb" onclick="showPage('reports',this)"><i class="ti ti-chart-bar"></i>Reports</button>
-  <button class="nb" onclick="showPage('settings',this)"><i class="ti ti-settings"></i>Settings</button>
-</nav>
-
-<div class="pages">
-<!-- LIST PAGE -->
-<div id="page-list" class="page active">
-  <div id="trip-bar" class="card" style="padding:9px 12px"></div>
-  <div id="trip-actions" style="display:none;flex-wrap:wrap;gap:4px;margin-bottom:8px" class="rf"></div>
-  <div id="shopping-list" style="flex:1;overflow-y:auto"></div>
-</div>
-
-<!-- ITEMS PAGE -->
-<div id="page-items" class="page">
-  <div style="display:flex;gap:6px;margin-bottom:8px">
-    <input class="inp" id="item-search" placeholder="🔍 Search..." oninput="renderItems()" style="flex:1">
-  </div>
-  <div id="items-list" style="flex:1;overflow-y:auto"></div>
-</div>
-
-<!-- TRIPS PAGE -->
-<div id="page-trips" class="page">
-  <div style="font-size:12px;font-weight:600;color:var(--t3);margin-bottom:6px;text-transform:uppercase">Trip History</div>
-  <div id="trips-list" style="flex:1;overflow-y:auto"></div>
-</div>
-
-<!-- REPORTS PAGE -->
-<div id="page-reports" class="page">
-  <div id="report-stats" style="display:flex;gap:6px;margin-bottom:8px"></div>
-  <div id="reports-content" style="flex:1;overflow-y:auto"></div>
-</div>
-
-<!-- SETTINGS PAGE -->
-<div id="page-settings" class="page" style="flex-direction:column;overflow-y:auto">
-  <div style="font-size:12px;font-weight:600;color:var(--t3);margin-bottom:6px;text-transform:uppercase">Family</div>
-  <div class="card" id="fam-info-card"></div>
-  <div style="font-size:12px;font-weight:600;color:var(--t3);margin-top:10px;margin-bottom:6px;text-transform:uppercase">Language</div>
-  <div class="card">
-    <div style="display:flex;gap:8px">
-      <div class="lo" id="lo-hi" onclick="setLang('hi')"><div style="font-size:22px">🇮🇳</div><div style="font-size:12px;font-weight:700">हिंदी</div></div>
-      <div class="lo" id="lo-mr" onclick="setLang('mr')"><div style="font-size:22px">🇮🇳</div><div style="font-size:12px;font-weight:700">मराठी</div></div>
-      <div class="lo" id="lo-en" onclick="setLang('en')"><div style="font-size:22px">🇬🇧</div><div style="font-size:12px;font-weight:700">English</div></div>
-    </div>
-  </div>
-  <div style="font-size:12px;font-weight:600;color:var(--t3);margin-top:10px;margin-bottom:6px;text-transform:uppercase">Tools</div>
-  <div class="card">
-    <div style="display:flex;flex-direction:column;gap:7px">
-      <button class="btn btn-p" style="width:100%" onclick="loadDefaultItems()"><i class="ti ti-sparkles"></i> Load Default Items</button>
-      <button class="btn" style="width:100%" onclick="exportCSV()"><i class="ti ti-file-spreadsheet"></i> Export CSV</button>
-      <button class="btn btn-r" style="width:100%" onclick="logout()"><i class="ti ti-logout"></i> Leave Family</button>
-    </div>
-  </div>
-</div>
-</div>
-</div>
-
-<button class="fab" id="main-fab" onclick="fabClick()"><i class="ti ti-plus"></i></button>
-</div>
-
-<!-- ONBOARD -->
-<div id="ob-ov" class="ob-ov" style="display:none">
-<div class="ob-card">
-  <div style="font-size:32px;margin-bottom:8px">🛒</div>
-  <div style="font-size:18px;font-weight:700;margin-bottom:3px">Smart Grocery</div>
-  <div style="font-size:13px;color:var(--t3);margin-bottom:18px">Family Shopping List</div>
-  <div style="display:flex;gap:8px;margin-bottom:16px" id="lang-choices"></div>
-  <div style="display:flex;gap:8px">
-    <button class="btn btn-p" style="flex:1;justify-content:center" onclick="showFamilySetup('create')"><i class="ti ti-plus"></i> Create</button>
-    <button class="btn" style="flex:1;justify-content:center" onclick="showFamilySetup('join')"><i class="ti ti-login"></i> Join</button>
-  </div>
-</div>
-</div>
-
-<!-- MODALS -->
-<div class="mo" id="m-item">
-<div class="ms">
-  <button class="mc" onclick="closeM('m-item')"><i class="ti ti-x"></i></button>
-  <h3 id="item-title">Add Item</h3>
-  <div class="fr"><label>Name *</label><input class="inp" id="f-name" placeholder="e.g. Aata"></div>
-  <div class="fr"><label>Category *</label><select class="inp" id="f-cat"></select></div>
-  <div style="display:flex;gap:6px">
-    <div class="fr" style="flex:1"><label>Qty</label><input class="inp" id="f-qty" type="number" placeholder="1" step="0.1"></div>
-    <div class="fr" style="flex:1"><label>Unit</label><select class="inp" id="f-unit"><option>pcs</option><option>kg</option><option>g</option><option>L</option><option>ml</option><option>pack</option><option>bottle</option></select></div>
-  </div>
-  <div class="fr"><label>Price (₹)</label><input class="inp" id="f-price" type="number" placeholder="0"></div>
-  <div style="display:flex;gap:6px;margin-top:10px">
-    <button class="btn" style="flex:1" onclick="closeM('m-item')">Cancel</button>
-    <button class="btn btn-p" style="flex:1" onclick="saveItem()">Save</button>
-  </div>
-</div>
-</div>
-
-<div class="mo" id="m-trip">
-<div class="ms">
-  <button class="mc" onclick="closeM('m-trip')"><i class="ti ti-x"></i></button>
-  <h3>New Trip</h3>
-  <div class="fr"><label>Trip Name</label><input class="inp" id="t-name" placeholder="Weekly Shopping"></div>
-  <div class="fr"><label>Budget (₹)</label><input class="inp" id="t-budget" type="number" placeholder="0"></div>
-  <button class="btn btn-p" style="width:100%;margin-top:8px" onclick="createTrip()">Start Trip 🛒</button>
-</div>
-</div>
-
-<div class="mo" id="m-mark">
-<div class="ms">
-  <button class="mc" onclick="closeM('m-mark')"><i class="ti ti-x"></i></button>
-  <h3 id="mark-title">Mark Item</h3>
-  <div class="fr"><label>Amount Paid (₹) *</label><input class="inp" id="mark-amt" type="number" placeholder="0" autofocus></div>
-  <div class="fr"><label>Qty (optional)</label><input class="inp" id="mark-qty" type="number" placeholder=""></div>
-  <div style="display:flex;gap:6px;margin-top:8px">
-    <button class="btn" style="flex:1" onclick="closeM('m-mark')">Cancel</button>
-    <button class="btn btn-p" style="flex:1" onclick="saveMark()">✓ Mark</button>
-  </div>
-</div>
-</div>
-
-<div class="mo" id="m-add-items">
-<div class="ms" style="max-height:85vh;overflow-y:auto">
-  <button class="mc" onclick="closeM('m-add-items')"><i class="ti ti-x"></i></button>
-  <h3>Add Items to Trip</h3>
-  <div style="font-size:11px;color:var(--t3);margin-bottom:8px">Tap to add to list</div>
-  <div id="add-items-list"></div>
-</div>
-</div>
-
-<div class="mo" id="m-members">
-<div class="ms">
-  <button class="mc" onclick="closeM('m-members')"><i class="ti ti-x"></i></button>
-  <h3>Family Members</h3>
-  <div id="members-list"></div>
-</div>
-</div>
-
-<div class="mo" id="m-family-setup">
-<div class="ms">
-  <button class="mc" onclick="closeM('m-family-setup')"><i class="ti ti-x"></i></button>
-  <div id="fam-setup-content"></div>
-</div>
-</div>
-
-<div class="mo" id="m-history">
-<div class="ms" style="max-height:85vh;overflow-y:auto">
-  <button class="mc" onclick="closeM('m-history')"><i class="ti ti-x"></i></button>
-  <h3 id="hist-title">Trip Details</h3>
-  <div id="hist-content"></div>
-</div>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<script>
-// ================================
+// ============================================================
 // 🔥 PASTE YOUR FIREBASE CONFIG HERE
-// ================================
+// ============================================================
 const firebaseConfig = {
   apiKey: "AIzaSyDtlATxvywvU5jsyvYE6VcmwLBzOCVhpRY",
   authDomain: "smart-grocery-402c3.firebaseapp.com",
@@ -255,85 +22,503 @@ const firebaseConfig = {
   messagingSenderId: "739331723704",
   appId: "1:739331723704:web:df442d9f5399f7ab667f4d"
 };
-// ================================
+// ============================================================
 
-const CATS=[{id:'grain',name:'Anaj & Dal',icon:'🌾'},{id:'dairy',name:'Dairy',icon:'🥛'},{id:'veg',name:'Sabzi',icon:'🥦'},{id:'masala',name:'Masale',icon:'🌶️'},{id:'snack',name:'Snacks',icon:'🍪'},{id:'sauce',name:'Sauces',icon:'🍯'},{id:'noodle',name:'Noodles',icon:'🍜'},{id:'hygiene',name:'Soap',icon:'🧴'},{id:'house',name:'Home',icon:'🧹'},{id:'other',name:'Other',icon:'📦'}];
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+window._db = db;
+window._firebase = { doc, setDoc, getDoc, collection, onSnapshot, addDoc, updateDoc, deleteDoc, query, orderBy, serverTimestamp, getDocs };
+window._firebaseReady = true;
+document.dispatchEvent(new Event('firebaseReady'));
+</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f4f7f4;color:#1a2e1a;min-height:100vh;font-size:15px}
+:root{--green:#2d6a4f;--gl:#40916c;--gp:#d8f3dc;--gb:#f0faf2;--acc:#52b788;--red:#e63946;--amber:#f4a261;--t1:#1a2e1a;--t2:#4a6741;--t3:#7a9e7e;--bdr:#c8e6c9;--sh:0 2px 10px rgba(45,106,79,0.10)}
+.app{max-width:430px;margin:0 auto;background:#fff;min-height:100vh;display:flex;flex-direction:column;position:relative}
+/* HEADER */
+header{background:var(--green);color:#fff;padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.15)}
+.logo-wrap{display:flex;align-items:center;gap:10px}
+.logo{width:36px;height:36px;background:rgba(255,255,255,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.hdr-title{font-size:17px;font-weight:700}
+.hdr-sub{font-size:11px;opacity:0.8;margin-top:1px}
+.lang-sw{display:flex;gap:2px;background:rgba(255,255,255,0.15);border-radius:8px;padding:3px}
+.lb{padding:3px 7px;border-radius:5px;border:none;background:transparent;color:rgba(255,255,255,0.7);font-size:11px;font-weight:600;cursor:pointer;transition:all 0.15s}
+.lb.active{background:rgba(255,255,255,0.9);color:var(--green)}
+.family-badge{display:flex;align-items:center;gap:4px;background:rgba(255,255,255,0.15);border-radius:8px;padding:4px 8px;font-size:11px;cursor:pointer;border:none;color:#fff}
+/* NAV */
+nav{display:flex;background:#fff;border-bottom:1.5px solid var(--bdr);overflow-x:auto;scrollbar-width:none;position:sticky;top:62px;z-index:99}
+nav::-webkit-scrollbar{display:none}
+.nb{flex:1;min-width:52px;padding:9px 2px 7px;border:none;background:none;font-size:10px;color:var(--t3);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;transition:color 0.15s;position:relative}
+.nb i{font-size:18px}
+.nb.active{color:var(--green)}
+.nb.active::after{content:'';position:absolute;bottom:0;left:20%;right:20%;height:2.5px;background:var(--green);border-radius:2px}
+.nb .notif{position:absolute;top:6px;right:8px;width:8px;height:8px;background:var(--red);border-radius:50%;border:1.5px solid #fff}
+/* PAGES */
+.page{display:none;flex:1;overflow-y:auto;padding:14px;padding-bottom:80px}
+.page.active{display:block}
+/* CARDS */
+.card{background:#fff;border:1px solid var(--bdr);border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:var(--sh)}
+.card-flat{background:var(--gb);border-radius:12px;padding:12px;margin-bottom:8px}
+/* FAB */
+.fab{position:fixed;bottom:78px;right:16px;width:52px;height:52px;border-radius:50%;background:var(--green);color:#fff;border:none;font-size:26px;cursor:pointer;box-shadow:0 4px 18px rgba(45,106,79,0.4);display:flex;align-items:center;justify-content:center;z-index:200;transition:transform 0.15s}
+.fab:active{transform:scale(0.92)}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:8px 13px;border-radius:8px;border:1.5px solid var(--bdr);background:#fff;color:var(--green);font-size:13px;font-weight:500;cursor:pointer;transition:all 0.15s;white-space:nowrap}
+.btn:active{background:var(--gp)}
+.btn-p{background:var(--green);color:#fff;border-color:var(--green)}
+.btn-p:active{background:var(--gl)}
+.btn-sm{padding:5px 9px;font-size:12px;border-radius:6px}
+.btn-r{color:var(--red);border-color:#ffc1c5}
+.btn-r:active{background:#fff0f0}
+.btn-w{background:rgba(255,255,255,0.15);color:#fff;border-color:rgba(255,255,255,0.3);font-size:11px;padding:4px 8px}
+/* INPUTS */
+.inp{width:100%;padding:9px 12px;border:1.5px solid var(--bdr);border-radius:8px;font-size:14px;color:var(--t1);outline:none;background:#fff;transition:border 0.15s}
+.inp:focus{border-color:var(--green)}
+select.inp{cursor:pointer}
+/* MODALS */
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:500;align-items:flex-end;justify-content:center}
+.mo.open{display:flex}
+.ms{background:#fff;border-radius:22px 22px 0 0;padding:20px 16px 32px;width:100%;max-width:430px;max-height:90vh;overflow-y:auto;position:relative}
+.ms h3{font-size:17px;font-weight:700;margin-bottom:14px}
+.mc{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;background:var(--gb);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--t3)}
+/* FORM */
+.fr{margin-bottom:10px}
+.fr label{display:block;font-size:12px;font-weight:600;color:var(--t3);margin-bottom:4px}
+/* BADGES */
+.bdg{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600}
+.bg{background:var(--gp);color:var(--green)}
+.ba{background:#fff3e0;color:#e65100}
+.br{background:#fce4e4;color:var(--red)}
+/* PILLS */
+.pill{display:inline-flex;align-items:center;gap:4px;padding:5px 11px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bdr);background:#fff;transition:all 0.15s;margin:3px;white-space:nowrap}
+.pill.active{background:var(--green);color:#fff;border-color:var(--green)}
+/* ITEM ROW */
+.ir{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid #f0f4f0}
+.ir:last-child{border-bottom:none}
+.ick{width:24px;height:24px;border-radius:50%;border:2px solid var(--acc);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all 0.2s}
+.ick.on{background:var(--green);border-color:var(--green)}
+.ick.on i{color:#fff}
+.ii{flex:1;min-width:0}
+.iname{font-size:14px;font-weight:500}
+.imeta{font-size:11px;color:var(--t3);margin-top:1px}
+.ir.done .iname{text-decoration:line-through;color:var(--t3)}
+/* STAT */
+.srow{display:flex;gap:8px;margin-bottom:10px}
+.sc{flex:1;background:var(--gb);border-radius:12px;padding:12px;text-align:center}
+.sv{font-size:19px;font-weight:700;color:var(--green)}
+.sl{font-size:11px;color:var(--t3);margin-top:2px}
+/* PROGRESS */
+.pb{height:6px;background:#e8f5e9;border-radius:3px;overflow:hidden;margin-top:6px}
+.pf{height:100%;background:var(--green);border-radius:3px;transition:width 0.4s}
+/* CHART */
+.cw{position:relative;height:200px;margin:8px 0}
+/* EMPTY */
+.emp{text-align:center;padding:36px 20px;color:var(--t3)}
+.emp i{font-size:44px;color:var(--bdr);display:block;margin-bottom:10px}
+/* TOAST */
+.toast{position:fixed;bottom:86px;left:50%;transform:translateX(-50%) translateY(20px);background:#1a2e1a;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;opacity:0;z-index:1000;transition:all 0.3s;pointer-events:none;white-space:nowrap;max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* MISC */
+.fb{display:flex;align-items:center;justify-content:space-between}
+.rf{display:flex;align-items:center;gap:8px}
+.st{font-size:12px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:0.5px;margin:12px 0 7px}
+.ci{font-size:20px;width:36px;height:36px;border-radius:10px;background:var(--gp);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+/* ONBOARD */
+.ob-ov{position:fixed;inset:0;background:linear-gradient(135deg,#2d6a4f,#40916c);z-index:900;display:flex;align-items:center;justify-content:center;padding:20px}
+.ob-card{background:#fff;border-radius:24px;padding:28px 22px;width:100%;max-width:380px;text-align:center}
+.lo{display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 10px;border:2px solid var(--bdr);border-radius:14px;cursor:pointer;transition:all 0.15s;flex:1}
+.lo:hover,.lo.sel{border-color:var(--green);background:var(--gb)}
+/* FAMILY SCREEN */
+.fam-ov{position:fixed;inset:0;background:linear-gradient(135deg,#1b4332,#2d6a4f);z-index:800;display:flex;align-items:center;justify-content:center;padding:20px}
+.fam-card{background:#fff;border-radius:24px;padding:28px 22px;width:100%;max-width:380px}
+/* MEMBER ROW */
+.memrow{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f0f4f0}
+.memrow:last-child{border-bottom:none}
+.mavt{width:36px;height:36px;border-radius:50%;background:var(--gp);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--green);font-size:14px;flex-shrink:0}
+/* HISTORY ITEM */
+.hist-item{padding:8px 10px;background:var(--gb);border-radius:8px;margin-bottom:5px}
+.hist-item .iname{font-size:13px}
+/* SYNC INDICATOR */
+.sync-dot{width:8px;height:8px;border-radius:50%;background:#4ade80;display:inline-block;margin-right:4px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+/* DIVIDER */
+.dv{height:1px;background:var(--bdr);margin:12px 0}
+/* NOTIFICATION PANEL */
+.notif-panel{background:#fff;border:1px solid var(--bdr);border-radius:12px;padding:10px;margin-bottom:10px}
+.notif-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid #f5f5f5;font-size:13px}
+.notif-item:last-child{border-bottom:none}
+.notif-item .ni{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;margin-top:5px}
+/* LOADING */
+.loading{display:flex;align-items:center;justify-content:center;padding:40px;flex-direction:column;gap:12px;color:var(--t3)}
+.spinner{width:32px;height:32px;border:3px solid var(--bdr);border-top-color:var(--green);border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* PIN INPUT */
+.pin-wrap{display:flex;gap:10px;justify-content:center;margin:16px 0}
+.pin-box{width:52px;height:56px;border:2px solid var(--bdr);border-radius:10px;font-size:24px;text-align:center;outline:none;transition:border 0.15s}
+.pin-box:focus{border-color:var(--green)}
+</style>
+</head>
+<body>
+<div class="app" id="app" style="display:none">
+<header>
+  <div class="logo-wrap">
+    <div class="logo">🛒</div>
+    <div><div class="hdr-title">Smart Grocery</div><div class="hdr-sub" id="hdr-sub">Loading...</div></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:6px">
+    <div class="lang-sw">
+      <button class="lb" onclick="setLang('en')" id="lb-en">EN</button>
+      <button class="lb" onclick="setLang('hi')" id="lb-hi">हि</button>
+      <button class="lb" onclick="setLang('mr')" id="lb-mr">म</button>
+    </div>
+    <button class="family-badge" onclick="showFamilyInfo()" id="fam-badge" title="Family Info">
+      <span class="sync-dot"></span><span id="fam-name-hdr">...</span>
+    </button>
+  </div>
+</header>
 
+<nav>
+  <button class="nb active" onclick="showPage('list',this)"><i class="ti ti-list-check"></i><span data-t="nav_list">List</span></button>
+  <button class="nb" onclick="showPage('items',this)"><i class="ti ti-category"></i><span data-t="nav_items">Items</span></button>
+  <button class="nb" onclick="showPage('trips',this)"><i class="ti ti-shopping-bag"></i><span data-t="nav_trips">Trips</span></button>
+  <button class="nb" onclick="showPage('reports',this)"><i class="ti ti-chart-bar"></i><span data-t="nav_reports">Reports</span></button>
+  <button class="nb" onclick="showPage('settings',this)" id="nav-settings"><i class="ti ti-settings"></i><span data-t="nav_settings">Settings</span></button>
+</nav>
+
+<!-- LIST PAGE -->
+<div id="page-list" class="page active">
+  <div id="trip-bar" class="card" style="padding:10px 14px;margin-bottom:10px"></div>
+  <div id="trip-actions" style="display:none;flex-wrap:wrap;gap:5px;margin-bottom:10px" class="rf"></div>
+  <div style="display:flex;gap:4px;overflow-x:auto;margin-bottom:10px;padding-bottom:2px;scrollbar-width:none" id="cat-filter-list"></div>
+  <div id="shopping-list"></div>
+</div>
+
+<!-- ITEMS PAGE -->
+<div id="page-items" class="page">
+  <div class="rf" style="margin-bottom:10px">
+    <input class="inp" id="item-search" placeholder="🔍 Search..." oninput="renderItems()" style="flex:1">
+  </div>
+  <div style="display:flex;gap:4px;overflow-x:auto;margin-bottom:10px;padding-bottom:2px;scrollbar-width:none" id="cat-filter-items"></div>
+  <div id="items-list"></div>
+</div>
+
+<!-- TRIPS PAGE -->
+<div id="page-trips" class="page">
+  <div class="st" data-t="trips_history">Trip History</div>
+  <div id="trips-list"></div>
+</div>
+
+<!-- REPORTS PAGE -->
+<div id="page-reports" class="page">
+  <div class="srow" id="report-stats"></div>
+  <div class="card">
+    <div style="font-size:13px;font-weight:600;margin-bottom:6px;color:var(--t2)" data-t="monthly_chart">Monthly Kharcha</div>
+    <div class="cw"><canvas id="monthlyChart"></canvas></div>
+  </div>
+  <div class="card">
+    <div style="font-size:13px;font-weight:600;margin-bottom:6px;color:var(--t2)" data-t="cat_chart">Category Kharcha</div>
+    <div class="cw"><canvas id="catChart"></canvas></div>
+  </div>
+  <div class="card">
+    <div style="font-size:13px;font-weight:600;margin-bottom:6px;color:var(--t2)" data-t="top_items">Top Items</div>
+    <div id="top-items-list"></div>
+  </div>
+</div>
+
+<!-- SETTINGS PAGE -->
+<div id="page-settings" class="page">
+  <div class="st" data-t="settings_family">Family</div>
+  <div class="card" id="family-info-card"></div>
+  <div class="st" data-t="settings_lang">Language</div>
+  <div class="card">
+    <div style="display:flex;gap:8px">
+      <div class="lo" id="lo-en" onclick="setLang('en')"><div style="font-size:24px">🇬🇧</div><div style="font-size:13px;font-weight:700">English</div></div>
+      <div class="lo" id="lo-hi" onclick="setLang('hi')"><div style="font-size:24px">🇮🇳</div><div style="font-size:13px;font-weight:700">हिंदी</div></div>
+      <div class="lo" id="lo-mr" onclick="setLang('mr')"><div style="font-size:24px">🇮🇳</div><div style="font-size:13px;font-weight:700">मराठी</div></div>
+    </div>
+  </div>
+  <div class="st" data-t="settings_data">Data</div>
+  <div class="card">
+    <div style="display:flex;flex-direction:column;gap:9px">
+      <button class="btn" onclick="exportCSV()"><i class="ti ti-file-spreadsheet"></i> <span data-t="btn_csv">Export CSV</span></button>
+      <button class="btn" onclick="loadDefaultItems()"><i class="ti ti-sparkles"></i> <span data-t="btn_defaults">Load Default Items</span></button>
+    </div>
+  </div>
+  <div class="st" id="st-cats" data-t="settings_cats">Categories</div>
+  <div class="card" id="admin-cats-section">
+    <div id="cat-manager"></div>
+    <div style="display:flex;gap:6px;margin-top:10px">
+      <input class="inp" id="new-cat-name" placeholder="Category naam..." style="flex:1">
+      <input class="inp" id="new-cat-icon" placeholder="🏷️" style="width:50px">
+      <button class="btn btn-p btn-sm" onclick="addCategory()"><i class="ti ti-plus"></i></button>
+    </div>
+  </div>
+</div>
+
+<button class="fab" id="main-fab"><i class="ti ti-plus"></i></button>
+</div>
+
+<!-- ONBOARD OVERLAY -->
+<div id="ob-ov" class="ob-ov">
+  <div class="ob-card">
+    <div style="font-size:40px;margin-bottom:8px">🛒</div>
+    <div style="font-size:22px;font-weight:700;margin-bottom:4px">Smart Grocery</div>
+    <div style="font-size:14px;color:var(--t3);margin-bottom:22px">Bhasha chunein / Select Language</div>
+    <div style="display:flex;gap:8px;margin-bottom:20px">
+      <div class="lo sel" id="ob-hi" onclick="obLang('hi')"><div style="font-size:24px">🇮🇳</div><div style="font-size:12px;font-weight:700">हिंदी</div></div>
+      <div class="lo" id="ob-mr" onclick="obLang('mr')"><div style="font-size:24px">🇮🇳</div><div style="font-size:12px;font-weight:700">मराठी</div></div>
+      <div class="lo" id="ob-en" onclick="obLang('en')"><div style="font-size:24px">🇬🇧</div><div style="font-size:12px;font-weight:700">English</div></div>
+    </div>
+    <button class="btn btn-p" style="width:100%;font-size:15px;padding:13px" onclick="obNext()">Aage Badho →</button>
+  </div>
+</div>
+
+<!-- FAMILY SETUP OVERLAY -->
+<div id="fam-ov" class="fam-ov" style="display:none">
+  <div class="fam-card">
+    <div style="font-size:32px;text-align:center;margin-bottom:6px">👨‍👩‍👧</div>
+    <div style="font-size:18px;font-weight:700;text-align:center;margin-bottom:4px" id="fam-title">Family Setup</div>
+    <div style="font-size:13px;color:var(--t3);text-align:center;margin-bottom:20px" id="fam-sub">Apna family group banao ya join karo</div>
+    <div id="fam-setup-content"></div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="mo" id="modal-item">
+<div class="ms">
+  <button class="mc" onclick="closeModal('modal-item')"><i class="ti ti-x"></i></button>
+  <h3 id="item-modal-title">Item</h3>
+  <div class="fr"><label data-t="lbl_name">Naam *</label><input class="inp" id="f-name" placeholder="e.g. Aata, Doodh..."></div>
+  <div class="fr"><label data-t="lbl_cat">Category *</label><select class="inp" id="f-cat"></select></div>
+  <div style="display:flex;gap:8px">
+    <div class="fr" style="flex:1"><label data-t="lbl_qty">Quantity</label><input class="inp" id="f-qty" type="number" placeholder="1" min="0" step="0.1"></div>
+    <div class="fr" style="flex:1"><label data-t="lbl_unit">Unit</label><select class="inp" id="f-unit"><option>pcs</option><option>kg</option><option>g</option><option>L</option><option>ml</option><option>dozen</option><option>pack</option><option>bottle</option><option>bag</option><option>box</option></select></div>
+  </div>
+  <div class="fr"><label data-t="lbl_price">Est. Price (₹)</label><input class="inp" id="f-price" type="number" placeholder="0" min="0"></div>
+  <div class="fr"><label data-t="lbl_notes">Notes</label><input class="inp" id="f-notes" placeholder="Koi khaas baat..."></div>
+  <div style="display:flex;gap:8px;margin-top:14px">
+    <button class="btn" style="flex:1" onclick="closeModal('modal-item')" data-t="btn_cancel">Cancel</button>
+    <button class="btn btn-p" style="flex:1" onclick="saveItem()" data-t="btn_save">Save</button>
+  </div>
+</div>
+</div>
+
+<div class="mo" id="modal-trip">
+<div class="ms">
+  <button class="mc" onclick="closeModal('modal-trip')"><i class="ti ti-x"></i></button>
+  <h3 data-t="new_trip_title">Naya Trip</h3>
+  <div class="fr"><label data-t="lbl_trip_name">Trip Naam</label><input class="inp" id="t-name" placeholder="Weekly Shopping..."></div>
+  <div class="fr"><label data-t="lbl_budget">Budget (₹)</label><input class="inp" id="t-budget" type="number" placeholder="0"></div>
+  <button class="btn btn-p" style="width:100%;margin-top:10px" onclick="createTrip()" data-t="btn_start_trip">Trip Shuru Karo 🛒</button>
+</div>
+</div>
+
+<div class="mo" id="modal-mark">
+<div class="ms">
+  <button class="mc" onclick="closeModal('modal-mark')"><i class="ti ti-x"></i></button>
+  <h3 id="mark-title">Mark Karo</h3>
+  <div class="fr"><label data-t="lbl_paid">Amount Paid (₹)</label><input class="inp" id="mark-amount" type="number" placeholder="0"></div>
+  <div class="fr"><label data-t="lbl_mark_qty">Qty Li</label><input class="inp" id="mark-qty" type="number" placeholder=""></div>
+  <div style="display:flex;gap:8px;margin-top:10px">
+    <button class="btn" style="flex:1" onclick="closeModal('modal-mark')" data-t="btn_cancel">Cancel</button>
+    <button class="btn btn-p" style="flex:1" onclick="confirmMark()" data-t="btn_mark">✓ Mark</button>
+  </div>
+</div>
+</div>
+
+<div class="mo" id="modal-prev">
+<div class="ms" style="max-height:85vh;overflow-y:auto">
+  <button class="mc" onclick="closeModal('modal-prev')"><i class="ti ti-x"></i></button>
+  <h3 data-t="prev_title">Pichhle Trip Se</h3>
+  <div style="font-size:12px;color:var(--t3);margin-bottom:10px" data-t="prev_sub">Select karein</div>
+  <div id="prev-items-list"></div>
+  <button class="btn btn-p" style="width:100%;margin-top:10px" onclick="addPrevItems()" data-t="btn_add_sel">Add Karo</button>
+</div>
+</div>
+
+<div class="mo" id="modal-history">
+<div class="ms" style="max-height:90vh;overflow-y:auto">
+  <button class="mc" onclick="closeModal('modal-history')"><i class="ti ti-x"></i></button>
+  <h3 id="hist-title">Trip Details</h3>
+  <div id="hist-content"></div>
+</div>
+</div>
+
+<div class="mo" id="modal-members">
+<div class="ms">
+  <button class="mc" onclick="closeModal('modal-members')"><i class="ti ti-x"></i></button>
+  <h3 data-t="members_title">Family Members</h3>
+  <div id="members-list"></div>
+  <div class="dv"></div>
+  <div id="admin-section" style="display:none">
+    <div style="font-size:12px;font-weight:600;color:var(--t3);margin-bottom:8px" data-t="admin_tools">Admin Tools</div>
+    <button class="btn btn-sm" style="margin-bottom:8px;width:100%" onclick="changePin()"><i class="ti ti-key"></i> <span data-t="change_pin">PIN Change Karo</span></button>
+  </div>
+</div>
+</div>
+
+<div class="mo" id="modal-pin-change">
+<div class="ms">
+  <button class="mc" onclick="closeModal('modal-pin-change')"><i class="ti ti-x"></i></button>
+  <h3 data-t="change_pin">PIN Change</h3>
+  <div class="fr"><label data-t="current_pin">Current PIN</label>
+    <div class="pin-wrap" id="cur-pin-wrap">
+      <input class="pin-box" maxlength="1" type="password" inputmode="numeric">
+      <input class="pin-box" maxlength="1" type="password" inputmode="numeric">
+      <input class="pin-box" maxlength="1" type="password" inputmode="numeric">
+      <input class="pin-box" maxlength="1" type="password" inputmode="numeric">
+    </div>
+  </div>
+  <div class="fr"><label data-t="new_pin">New PIN</label>
+    <div class="pin-wrap" id="new-pin-wrap">
+      <input class="pin-box" maxlength="1" type="password" inputmode="numeric">
+      <input class="pin-box" maxlength="1" type="password" inputmode="numeric">
+      <input class="pin-box" maxlength="1" type="password" inputmode="numeric">
+      <input class="pin-box" maxlength="1" type="password" inputmode="numeric">
+    </div>
+  </div>
+  <button class="btn btn-p" style="width:100%;margin-top:8px" onclick="savePinChange()" data-t="btn_save">Save</button>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===================== TRANSLATIONS =====================
 const T={
-  hi:{list:'लिस्ट',items:'आइटम',trips:'ट्रिप',reports:'रिपोर्ट',settings:'सेटिंग',new_trip:'नई ट्रिप',add_items:'आइटम जोड़ें',mark:'✓ मार्क',marked:'✓ मार्क हो गया',unmarked:'अनमार्क',delete_confirm:'Delete करें?',trip_start:'ट्रिप शुरू!',trip_end:'ट्रिप खत्म!',no_trip:'कोई ट्रिप नहीं',added:'जुड़ा ✓',updated:'अपडेट ✓',deleted:'डिलीट',select_all:'सब मार्क',unmark_all:'अनमार्क',end_trip:'खत्म करो',all_bought:'🎉 सब मिल गए!'},
-  mr:{list:'यादी',items:'वस्तू',trips:'ट्रिप',reports:'अहवाल',settings:'सेटिंग',new_trip:'नवीन ट्रिप',add_items:'वस्तू जोडा',mark:'✓ मार्क',marked:'✓ मार्क झाले',unmarked:'अनमार्क',delete_confirm:'डिलीट करा?',trip_start:'ट्रिप सुरू!',trip_end:'ट्रिप संपली!',no_trip:'कोणतीही ट्रिप नाही',added:'जोडले ✓',updated:'अपडेट ✓',deleted:'डिलीट',select_all:'सर्व मार्क',unmark_all:'अनमार्क',end_trip:'संपवा',all_bought:'🎉 सर्व मिळाले!'},
-  en:{list:'List',items:'Items',trips:'Trips',reports:'Reports',settings:'Settings',new_trip:'New Trip',add_items:'Add Items',mark:'✓ Mark',marked:'✓ Marked',unmarked:'Unmarked',delete_confirm:'Delete?',trip_start:'Trip started!',trip_end:'Trip ended!',no_trip:'No trip',added:'Added ✓',updated:'Updated ✓',deleted:'Deleted',select_all:'Mark All',unmark_all:'Unmark All',end_trip:'End Trip',all_bought:'🎉 All bought!'}
+  en:{nav_list:'List',nav_items:'Items',nav_trips:'Trips',nav_reports:'Reports',nav_settings:'Settings',hdr_sub:'Family Grocery',btn_prev_list:'Prev List',btn_select_all:'All Mark',btn_unmark_all:'Unmark',btn_end_trip:'End Trip',btn_cancel:'Cancel',btn_save:'Save',btn_mark:'✓ Mark',btn_start_trip:'Start Trip 🛒',btn_add_sel:'Add Selected',lbl_name:'Item Name *',lbl_cat:'Category *',lbl_qty:'Quantity',lbl_unit:'Unit',lbl_price:'Est. Price (₹)',lbl_notes:'Notes',lbl_trip_name:'Trip Name',lbl_budget:'Budget (₹)',lbl_paid:'Amount Paid (₹)',lbl_mark_qty:'Qty Bought',new_trip_title:'New Trip',prev_title:'From Last Trip',prev_sub:'Select items to carry',trips_history:'Trip History',monthly_chart:'Monthly Spending',cat_chart:'Category Spending',top_items:'Top Items',settings_family:'Family',settings_lang:'Language',settings_data:'Data & Tools',settings_cats:'Categories',btn_csv:'Export CSV',btn_defaults:'Load Default Items',add_item:'Add Item',edit_item:'Edit Item',no_trip:'No active trip',no_items:'No items',no_trips:'No trips yet',total_spent:'Total Spent',total_trips:'Trips',avg_trip:'Avg/Trip',all_done:'🎉 All bought!',marked:'✓ Marked',unmarked:'Unmarked',added:'Added ✓',updated:'Updated ✓',deleted:'Deleted',trip_start:'Trip started! 🛒',trip_end:'Trip ended! 🙏',csv_done:'CSV exported',defaults_done:'Default items added!',defaults_exist:'Already added',members_title:'Family Members',admin_tools:'Admin Tools',change_pin:'Change PIN',current_pin:'Current PIN',new_pin:'New PIN',create_family:'Create Family',join_family:'Join Family',family_code:'Family Code',your_name:'Your Name',family_name:'Family Name',set_pin:'Set PIN (4 digit)',enter_pin:'Enter PIN',admin_badge:'Admin 👑',member_badge:'Member',by_label:'by',trip_detail:'Trip Details',budget_label:'Budget',mark_as:'Mark as Bought'},
+  hi:{nav_list:'लिस्ट',nav_items:'आइटम',nav_trips:'ट्रिप',nav_reports:'रिपोर्ट',nav_settings:'सेटिंग',hdr_sub:'फैमिली ग्रोसरी',btn_prev_list:'पिछली लिस्ट',btn_select_all:'सब मार्क',btn_unmark_all:'अनमार्क',btn_end_trip:'खत्म',btn_cancel:'रद्द',btn_save:'सेव करो',btn_mark:'✓ मार्क',btn_start_trip:'ट्रिप शुरू 🛒',btn_add_sel:'जोड़ो',lbl_name:'नाम *',lbl_cat:'श्रेणी *',lbl_qty:'मात्रा',lbl_unit:'इकाई',lbl_price:'अनुमानित मूल्य (₹)',lbl_notes:'नोट्स',lbl_trip_name:'ट्रिप नाम',lbl_budget:'बजट (₹)',lbl_paid:'दी राशि (₹)',lbl_mark_qty:'ली मात्रा',new_trip_title:'नई ट्रिप',prev_title:'पिछली ट्रिप से',prev_sub:'आइटम चुनें',trips_history:'ट्रिप इतिहास',monthly_chart:'मासिक खर्च',cat_chart:'श्रेणी खर्च',top_items:'टॉप आइटम',settings_family:'फैमिली',settings_lang:'भाषा',settings_data:'डेटा & टूल्स',settings_cats:'श्रेणियाँ',btn_csv:'CSV एक्सपोर्ट',btn_defaults:'डिफ़ॉल्ट आइटम',add_item:'आइटम जोड़ें',edit_item:'संपादित करें',no_trip:'कोई ट्रिप नहीं',no_items:'कोई आइटम नहीं',no_trips:'कोई ट्रिप नहीं',total_spent:'कुल खर्च',total_trips:'ट्रिप',avg_trip:'औसत',all_done:'🎉 सब मिल गए!',marked:'✓ मार्क',unmarked:'अनमार्क',added:'जुड़ा ✓',updated:'अपडेट ✓',deleted:'डिलीट',trip_start:'ट्रिप शुरू! 🛒',trip_end:'ट्रिप खत्म! 🙏',csv_done:'CSV तैयार',defaults_done:'आइटम जुड़ गए!',defaults_exist:'पहले से हैं',members_title:'फैमिली सदस्य',admin_tools:'एडमिन टूल्स',change_pin:'PIN बदलो',current_pin:'वर्तमान PIN',new_pin:'नया PIN',create_family:'फैमिली बनाओ',join_family:'फैमिली जॉइन करो',family_code:'फैमिली कोड',your_name:'आपका नाम',family_name:'फैमिली नाम',set_pin:'PIN सेट करो (4 अंक)',enter_pin:'PIN डालो',admin_badge:'एडमिन 👑',member_badge:'सदस्य',by_label:'द्वारा',trip_detail:'ट्रिप विवरण',budget_label:'बजट',mark_as:'खरीदा मार्क करें'},
+  mr:{nav_list:'यादी',nav_items:'वस्तू',nav_trips:'ट्रिप',nav_reports:'अहवाल',nav_settings:'सेटिंग',hdr_sub:'फॅमिली ग्रोसरी',btn_prev_list:'मागील यादी',btn_select_all:'सर्व मार्क',btn_unmark_all:'अनमार्क',btn_end_trip:'संपव',btn_cancel:'रद्द',btn_save:'सेव करा',btn_mark:'✓ मार्क',btn_start_trip:'ट्रिप सुरू 🛒',btn_add_sel:'जोडा',lbl_name:'नाव *',lbl_cat:'श्रेणी *',lbl_qty:'प्रमाण',lbl_unit:'एकक',lbl_price:'अंदाजे किंमत (₹)',lbl_notes:'नोट्स',lbl_trip_name:'ट्रिप नाव',lbl_budget:'बजेट (₹)',lbl_paid:'दिलेली रक्कम (₹)',lbl_mark_qty:'घेतले प्रमाण',new_trip_title:'नवीन ट्रिप',prev_title:'मागील ट्रिपमधून',prev_sub:'वस्तू निवडा',trips_history:'ट्रिप इतिहास',monthly_chart:'मासिक खर्च',cat_chart:'श्रेणी खर्च',top_items:'टॉप वस्तू',settings_family:'फॅमिली',settings_lang:'भाषा',settings_data:'डेटा & टूल्स',settings_cats:'श्रेणी',btn_csv:'CSV एक्सपोर्ट',btn_defaults:'डीफॉल्ट वस्तू',add_item:'वस्तू जोडा',edit_item:'संपादित करा',no_trip:'कोणतीही ट्रिप नाही',no_items:'वस्तू नाहीत',no_trips:'ट्रिप नाही',total_spent:'एकूण खर्च',total_trips:'ट्रिप्स',avg_trip:'सरासरी',all_done:'🎉 सर्व मिळाले!',marked:'✓ मार्क',unmarked:'अनमार्क',added:'जोडले ✓',updated:'अपडेट ✓',deleted:'डिलीट',trip_start:'ट्रिप सुरू! 🛒',trip_end:'ट्रिप संपली! 🙏',csv_done:'CSV तयार',defaults_done:'वस्तू जोडल्या!',defaults_exist:'आधीच आहेत',members_title:'फॅमिली सदस्य',admin_tools:'ॲडमिन टूल्स',change_pin:'PIN बदला',current_pin:'सध्याचा PIN',new_pin:'नवीन PIN',create_family:'फॅमिली बनवा',join_family:'फॅमिली जॉइन करा',family_code:'फॅमिली कोड',your_name:'तुमचे नाव',family_name:'फॅमिली नाव',set_pin:'PIN सेट करा (4 अंक)',enter_pin:'PIN टाका',admin_badge:'ॲडमिन 👑',member_badge:'सदस्य',by_label:'द्वारे',trip_detail:'ट्रिप तपशील',budget_label:'बजेट',mark_as:'खरेदी मार्क करा'}
 };
 
-let lang='hi',session=null,familyData=null,items=[],trips=[],activeTrip=null;
-let db=null,editingItemId=null,markingItemId=null;
-let unsubItems=null,unsubTrips=null,unsubFamily=null;
+const CATS=[{id:'grain',name:'Anaj & Dal',icon:'🌾'},{id:'dairy',name:'Dairy',icon:'🥛'},{id:'veg',name:'Sabzi & Fruit',icon:'🥦'},{id:'masala',name:'Masale & Oil',icon:'🌶️'},{id:'snack',name:'Snacks',icon:'🍪'},{id:'sauce',name:'Sauces & Spreads',icon:'🍯'},{id:'noodle',name:'Noodles',icon:'🍜'},{id:'hygiene',name:'Soap & Shampoo',icon:'🧴'},{id:'house',name:'Ghar Ka Samaan',icon:'🧹'},{id:'other',name:'Other',icon:'📦'}];
 
+const DEFAULT_ITEMS=[
+  {name:'Chawal (Rice)',catId:'grain',qty:5,unit:'kg',price:60,notes:'Basmati'},
+  {name:'Aata (Wheat)',catId:'grain',qty:5,unit:'kg',price:45},{name:'Toor Dal',catId:'grain',qty:1,unit:'kg',price:120},
+  {name:'Moong Dal',catId:'grain',qty:500,unit:'g',price:70},{name:'Chana Dal',catId:'grain',qty:500,unit:'g',price:65},
+  {name:'Masoor Dal',catId:'grain',qty:500,unit:'g',price:75},{name:'Urad Dal',catId:'grain',qty:500,unit:'g',price:80},
+  {name:'Rajma',catId:'grain',qty:500,unit:'g',price:90},{name:'Chhole',catId:'grain',qty:500,unit:'g',price:85},
+  {name:'Poha',catId:'grain',qty:500,unit:'g',price:35},{name:'Suji (Rava)',catId:'grain',qty:500,unit:'g',price:30},
+  {name:'Doodh (Milk)',catId:'dairy',qty:1,unit:'L',price:28},{name:'Dahi (Curd)',catId:'dairy',qty:500,unit:'g',price:35},
+  {name:'Paneer',catId:'dairy',qty:200,unit:'g',price:80},{name:'Makhan (Butter)',catId:'dairy',qty:100,unit:'g',price:55},
+  {name:'Pyaz (Onion)',catId:'veg',qty:2,unit:'kg',price:30},{name:'Aloo (Potato)',catId:'veg',qty:2,unit:'kg',price:25},
+  {name:'Tamatar (Tomato)',catId:'veg',qty:1,unit:'kg',price:40},{name:'Lehsun (Garlic)',catId:'veg',qty:100,unit:'g',price:20},
+  {name:'Haldi',catId:'masala',qty:100,unit:'g',price:30},{name:'Lal Mirch Powder',catId:'masala',qty:100,unit:'g',price:35},
+  {name:'Dhaniya Powder',catId:'masala',qty:100,unit:'g',price:30},{name:'Jeera',catId:'masala',qty:100,unit:'g',price:40},
+  {name:'Garam Masala',catId:'masala',qty:50,unit:'g',price:40},{name:'Tel (Oil)',catId:'masala',qty:1,unit:'L',price:140},
+  {name:'Ghee',catId:'masala',qty:500,unit:'g',price:280},{name:'Namak (Salt)',catId:'masala',qty:1,unit:'kg',price:20},
+  {name:'Chini (Sugar)',catId:'masala',qty:1,unit:'kg',price:45},
+  {name:'Maggi Noodles',catId:'noodle',qty:4,unit:'pack',price:56},{name:'Pasta',catId:'noodle',qty:1,unit:'pack',price:45},
+  {name:'Parle-G Biscuits',catId:'snack',qty:2,unit:'pack',price:20},{name:'Marie Biscuits',catId:'snack',qty:1,unit:'pack',price:30},
+  {name:'Good Day Biscuits',catId:'snack',qty:1,unit:'pack',price:35},{name:'Namkeen',catId:'snack',qty:200,unit:'g',price:40},
+  {name:'Honey (Shahad)',catId:'sauce',qty:250,unit:'g',price:120},{name:'Tomato Ketchup',catId:'sauce',qty:1,unit:'bottle',price:80},
+  {name:'Jam',catId:'sauce',qty:1,unit:'bottle',price:90},{name:'Pickle (Achar)',catId:'sauce',qty:1,unit:'bottle',price:60},
+  {name:'Sabun (Soap)',catId:'hygiene',qty:4,unit:'pcs',price:80},{name:'Shampoo',catId:'hygiene',qty:1,unit:'bottle',price:150},
+  {name:'Toothpaste',catId:'hygiene',qty:1,unit:'pcs',price:80},
+  {name:'Detergent Powder',catId:'house',qty:1,unit:'kg',price:100},{name:'Dishwash',catId:'house',qty:1,unit:'pcs',price:45},
+  {name:'Phenyl',catId:'house',qty:1,unit:'bottle',price:80}
+];
+
+// ===================== STATE =====================
+let lang='hi', session=null, familyData=null, items=[], categories=[...CATS], trips=[];
+let activeTrip=null, activeTripId=null, editingItemId=null, markingItemId=null;
+let catFilterList='all', catFilterItems='all';
+let monthlyChart=null, catChart=null;
+let unsubItems=null, unsubTrip=null, unsubFamily=null;
+
+// ===================== HELPERS =====================
 function t(k){return T[lang]?.[k]||T.en[k]||k;}
-function toast(m){const el=document.getElementById('toast');el.textContent=m;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2200);}
-function openM(id){document.getElementById(id).classList.add('open');}
-function closeM(id){document.getElementById(id).classList.remove('open');}
-function setLang(l){lang=l;localStorage.setItem('sg_lang',l);renderAll();document.querySelectorAll('.lb').forEach(b=>b.classList.remove('active'));document.getElementById('lb-'+l).classList.add('active');}
-function getCat(id){return CATS.find(c=>c.id===id)||{name:'Other',icon:'📦'};}
-function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2);}
-function hashPin(p){let h=0;for(let i=0;i<p.length;i++){h=((h<<5)-h)+p.charCodeAt(i);h|=0;}return Math.abs(h).toString(16);}
-function getPinVal(wrapId){return [...document.querySelectorAll('#'+wrapId+' .pin-box')].map(b=>b.value).join('');}
 function fp(p){return p?'₹'+Number(p).toLocaleString('en-IN'):'—';}
+function getCat(id){return categories.find(c=>c.id===id)||{name:'Other',icon:'📦'};}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2);}
+function toast(msg,dur=2400){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),dur);}
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function hashPin(p){let h=0;for(let i=0;i<p.length;i++){h=((h<<5)-h)+p.charCodeAt(i);h|=0;}return Math.abs(h).toString(16);}
+function getPinFromBoxes(wrapId){return [...document.querySelectorAll('#'+wrapId+' .pin-box')].map(b=>b.value).join('');}
 
-// ===== FIREBASE INIT =====
-function initFirebase(){
-  const app=firebase.initializeApp(firebaseConfig);
-  db=firebase.firestore();
-  console.log('Firebase initialized');
+function setLang(l){
+  lang=l;
+  localStorage.setItem('sg_lang',l);
+  document.querySelectorAll('[data-t]').forEach(el=>{el.textContent=t(el.getAttribute('data-t'));});
+  document.querySelectorAll('.lb').forEach(b=>b.classList.remove('active'));
+  const lb=document.getElementById('lb-'+l);if(lb)lb.classList.add('active');
+  document.querySelectorAll('[id^=lo-]').forEach(b=>b.classList.remove('sel'));
+  const lo=document.getElementById('lo-'+l);if(lo)lo.classList.add('sel');
+  document.getElementById('hdr-sub').textContent=t('hdr_sub');
+  const se=document.getElementById('item-search');if(se)se.placeholder='🔍 Search...';
+  renderShoppingList();renderItems();renderFamilyInfoCard();
 }
 
-// ===== LOAD SESSION =====
+// ===================== FIREBASE OPS =====================
+function db(){return window._db;}
+function fb(){return window._firebase;}
+
+async function fbSet(path,data){const [col,...rest]=path.split('/');const docId=rest.join('/');await fb().setDoc(fb().doc(db(),col,docId),data,{merge:true});}
+async function fbGet(path){const[col,...rest]=path.split('/');const snap=await fb().getDoc(fb().doc(db(),col,rest.join('/')));return snap.exists()?snap.data():null;}
+async function fbAdd(col,data){return await fb().addDoc(fb().collection(db(),col),{...data,createdAt:fb().serverTimestamp()});}
+
+// ===================== SESSION =====================
 function loadSession(){
   try{const s=localStorage.getItem('sg_session');if(s)session=JSON.parse(s);}catch(e){}
   lang=localStorage.getItem('sg_lang')||'hi';
 }
-
-// ===== SAVE SESSION =====
 function saveSession(){localStorage.setItem('sg_session',JSON.stringify(session));}
 
-// ===== SHOW FAB CLICK =====
-async function fabClick(){
-  const activePage=document.querySelector('.page.active').id;
-  if(activePage==='page-list'){
-    if(!activeTrip)openM('m-trip');
-    else openM('m-add-items');
-  } else if(activePage==='page-items'){
-    editingItemId=null;
-    document.getElementById('item-title').textContent='Add Item';
-    document.getElementById('f-name').value='';
-    document.getElementById('f-qty').value='';
-    document.getElementById('f-price').value='';
-    populateCatSelect();
-    openM('m-item');
-  }
+// ===================== ONBOARD =====================
+let obSelectedLang='hi';
+function obLang(l){obSelectedLang=l;document.querySelectorAll('[id^=ob-]').forEach(b=>b.classList.remove('sel'));document.getElementById('ob-'+l).classList.add('sel');}
+function obNext(){setLang(obSelectedLang);document.getElementById('ob-ov').style.display='none';showFamilySetup();}
+
+// ===================== FAMILY SETUP =====================
+function showFamilySetup(){
+  document.getElementById('fam-ov').style.display='flex';
+  renderFamilySetupScreen('choose');
 }
 
-// ===== FAMILY SETUP =====
-function showFamilySetup(mode){
-  closeM('m-family-setup');
+function renderFamilySetupScreen(screen){
   const el=document.getElementById('fam-setup-content');
-  if(mode==='create'){
-    el.innerHTML=`<h3>Create Family</h3>
-    <div class="fr"><label>Your Name</label><input class="inp" id="fs-name" placeholder="Rahul"></div>
-    <div class="fr"><label>Family Name</label><input class="inp" id="fs-fam" placeholder="Sharma Family"></div>
-    <div class="fr"><label>Family Code (unique)</label><input class="inp" id="fs-code" placeholder="SHARMA123" style="text-transform:uppercase"></div>
-    <div class="fr"><label>PIN (4 digits)</label><div class="pin-wrap" id="fs-pin"><input class="pin-box" type="password" inputmode="numeric" maxlength="1"><input class="pin-box" type="password" inputmode="numeric" maxlength="1"><input class="pin-box" type="password" inputmode="numeric" maxlength="1"><input class="pin-box" type="password" inputmode="numeric" maxlength="1"></div></div>
-    <button class="btn btn-p" style="width:100%;margin-top:8px" onclick="createFamily()">Create Family 👨‍👩‍👧</button>`;
-    setupPinBoxes('fs-pin');
-  } else {
-    el.innerHTML=`<h3>Join Family</h3>
-    <div class="fr"><label>Your Name</label><input class="inp" id="fj-name" placeholder="Priya"></div>
-    <div class="fr"><label>Family Code</label><input class="inp" id="fj-code" placeholder="SHARMA123" style="text-transform:uppercase"></div>
-    <div class="fr"><label>PIN</label><div class="pin-wrap" id="fj-pin"><input class="pin-box" type="password" inputmode="numeric" maxlength="1"><input class="pin-box" type="password" inputmode="numeric" maxlength="1"><input class="pin-box" type="password" inputmode="numeric" maxlength="1"><input class="pin-box" type="password" inputmode="numeric" maxlength="1"></div></div>
-    <button class="btn btn-p" style="width:100%;margin-top:8px" onclick="joinFamily()">Join Family 👥</button>`;
-    setupPinBoxes('fj-pin');
+  document.getElementById('fam-title').textContent=screen==='choose'?'👨‍👩‍👧 Family':screen==='create'?t('create_family'):t('join_family');
+  document.getElementById('fam-sub').textContent=screen==='choose'?'Kya karna hai?':screen==='create'?'Naya family group banao':'Code aur PIN se join karo';
+
+  if(screen==='choose'){
+    el.innerHTML=`
+      <button class="btn btn-p" style="width:100%;margin-bottom:10px;font-size:15px;padding:13px" onclick="renderFamilySetupScreen('create')"><i class="ti ti-plus"></i> ${t('create_family')}</button>
+      <button class="btn" style="width:100%;font-size:15px;padding:13px" onclick="renderFamilySetupScreen('join')"><i class="ti ti-users"></i> ${t('join_family')}</button>`;
+  } else if(screen==='create'){
+    el.innerHTML=`
+      <div class="fr"><label>${t('your_name')}</label><input class="inp" id="fs-yourname" placeholder="e.g. Rahul Sharma"></div>
+      <div class="fr"><label>${t('family_name')}</label><input class="inp" id="fs-famname" placeholder="e.g. Sharma Family"></div>
+      <div class="fr"><label>${t('family_code')} (unique)</label><input class="inp" id="fs-code" placeholder="e.g. SHARMA123" style="text-transform:uppercase"></div>
+      <div class="fr"><label>${t('set_pin')}</label>
+        <div class="pin-wrap" id="fs-pin-wrap">
+          <input class="pin-box" maxlength="1" type="password" inputmode="numeric">
+          <input class="pin-box" maxlength="1" type="password" inputmode="numeric">
+          <input class="pin-box" maxlength="1" type="password" inputmode="numeric">
+          <input class="pin-box" maxlength="1" type="password" inputmode="numeric">
+        </div>
+      </div>
+      <button class="btn btn-p" style="width:100%;margin-top:8px" onclick="createFamily()"><i class="ti ti-rocket"></i> ${t('create_family')}</button>
+      <button class="btn" style="width:100%;margin-top:8px" onclick="renderFamilySetupScreen('choose')">← Back</button>`;
+    setupPinBoxes('fs-pin-wrap');
+  } else if(screen==='join'){
+    el.innerHTML=`
+      <div class="fr"><label>${t('your_name')}</label><input class="inp" id="fj-yourname" placeholder="e.g. Priya Sharma"></div>
+      <div class="fr"><label>${t('family_code')}</label><input class="inp" id="fj-code" placeholder="e.g. SHARMA123" style="text-transform:uppercase"></div>
+      <div class="fr"><label>${t('enter_pin')}</label>
+        <div class="pin-wrap" id="fj-pin-wrap">
+          <input class="pin-box" maxlength="1" type="password" inputmode="numeric">
+          <input class="pin-box" maxlength="1" type="password" inputmode="numeric">
+          <input class="pin-box" maxlength="1" type="password" inputmode="numeric">
+          <input class="pin-box" maxlength="1" type="password" inputmode="numeric">
+        </div>
+      </div>
+      <button class="btn btn-p" style="width:100%;margin-top:8px" onclick="joinFamily()"><i class="ti ti-login"></i> ${t('join_family')}</button>
+      <button class="btn" style="width:100%;margin-top:8px" onclick="renderFamilySetupScreen('choose')">← Back</button>`;
+    setupPinBoxes('fj-pin-wrap');
   }
-  openM('m-family-setup');
 }
 
 function setupPinBoxes(wrapId){
@@ -347,379 +532,503 @@ function setupPinBoxes(wrapId){
 }
 
 async function createFamily(){
-  const name=document.getElementById('fs-name').value.trim();
-  const fam=document.getElementById('fs-fam').value.trim();
+  const yourName=document.getElementById('fs-yourname').value.trim();
+  const famName=document.getElementById('fs-famname').value.trim();
   const code=document.getElementById('fs-code').value.trim().toUpperCase();
-  const pin=getPinVal('fs-pin');
-  if(!name||!fam||!code||pin.length!==4){toast('Fill all fields!');return;}
+  const pin=getPinFromBoxes('fs-pin-wrap');
+  if(!yourName||!famName||!code){toast('Sab fields bharein!');return;}
+  if(pin.length!==4){toast('PIN 4 digits ka hona chahiye!');return;}
+  // Check if code exists
+  const exists=await fbGet('families/'+code);
+  if(exists){toast('Ye code already use mein hai! Doosra code try karo.');return;}
   const memberId=uid();
-  const doc={name:fam,code,pinHash:hashPin(pin),adminId:memberId,createdAt:new Date().toISOString(),members:{}};
-  doc.members[memberId]={name,joinedAt:new Date().toISOString(),isAdmin:true};
-  await firebase.firestore.setDoc(firebase.firestore.doc(db,'families',code),doc);
-  session={memberId,name,code,isAdmin:true};
+  const familyDoc={name:famName,code,pinHash:hashPin(pin),adminId:memberId,createdAt:new Date().toISOString(),members:{[memberId]:{name:yourName,joinedAt:new Date().toISOString(),isAdmin:true}}};
+  await fbSet('families/'+code,familyDoc);
+  session={memberId,memberName:yourName,familyCode:code,isAdmin:true};
   saveSession();
-  closeM('m-family-setup');
+  document.getElementById('fam-ov').style.display='none';
   initApp();
+  toast('Family banaayi! Code: '+code+' 🎉',4000);
 }
 
 async function joinFamily(){
-  const name=document.getElementById('fj-name').value.trim();
+  const yourName=document.getElementById('fj-yourname').value.trim();
   const code=document.getElementById('fj-code').value.trim().toUpperCase();
-  const pin=getPinVal('fj-pin');
-  if(!name||!code||pin.length!==4){toast('Fill all fields!');return;}
-  const snap=await firebase.firestore.getDoc(firebase.firestore.doc(db,'families',code));
-  if(!snap.exists()){toast('Code not found!');return;}
-  const data=snap.data();
-  if(data.pinHash!==hashPin(pin)){toast('Wrong PIN!');return;}
+  const pin=getPinFromBoxes('fj-pin-wrap');
+  if(!yourName||!code){toast('Sab fields bharein!');return;}
+  if(pin.length!==4){toast('PIN 4 digits ka hona chahiye!');return;}
+  const fam=await fbGet('families/'+code);
+  if(!fam){toast('Family code nahi mila! Check karo.');return;}
+  if(fam.pinHash!==hashPin(pin)){toast('PIN galat hai! Dobara try karo.');return;}
   const memberId=uid();
-  await firebase.firestore.updateDoc(firebase.firestore.doc(db,'families',code),{['members.'+memberId]:{name,joinedAt:new Date().toISOString(),isAdmin:false}});
-  session={memberId,name,code,isAdmin:data.adminId===memberId};
+  await fbSet('families/'+code,{members:{[memberId]:{name:yourName,joinedAt:new Date().toISOString(),isAdmin:false}}});
+  session={memberId,memberName:yourName,familyCode:code,isAdmin:false};
   saveSession();
-  closeM('m-family-setup');
+  document.getElementById('fam-ov').style.display='none';
   initApp();
+  toast('Family join kar li! 🎉');
 }
 
-// ===== INIT APP =====
+// ===================== INIT APP =====================
 async function initApp(){
-  if(!session){showOnboard();return;}
+  if(!session)return;
+  // Load family
+  familyData=await fbGet('families/'+session.familyCode);
+  if(!familyData){toast('Family data nahi mila');return;}
+  // Update isAdmin from firebase
+  const myMember=familyData.members?.[session.memberId];
+  if(myMember)session.isAdmin=myMember.isAdmin||false;
+  saveSession();
+  document.getElementById('fam-name-hdr').textContent=familyData.name||'Family';
+  setLang(lang);
   document.getElementById('app').style.display='flex';
-  document.getElementById('ob-ov').style.display='none';
-  familyData=await firebase.firestore.getDoc(firebase.firestore.doc(db,'families',session.code));
-  if(!familyData.exists()){toast('Family deleted');logout();return;}
-  familyData=familyData.data();
-  document.getElementById('fam-name').textContent=familyData.name;
-  listenItems();listenTrips();listenFamily();
-  renderAll();
-}
-
-function showOnboard(){
-  document.getElementById('app').style.display='none';
-  document.getElementById('ob-ov').style.display='flex';
-  const lo=document.getElementById('lang-choices');
-  lo.innerHTML=`<div class="lo sel" id="lo-hi" onclick="setLang('hi')"><div style="font-size:20px">🇮🇳</div><div style="font-size:11px;font-weight:700">हिंदी</div></div>
-  <div class="lo" id="lo-mr" onclick="setLang('mr')"><div style="font-size:20px">🇮🇳</div><div style="font-size:11px;font-weight:700">मराठी</div></div>
-  <div class="lo" id="lo-en" onclick="setLang('en')"><div style="font-size:20px">🇬🇧</div><div style="font-size:11px;font-weight:700">English</div></div>`;
-  document.querySelectorAll('.lo').forEach(el=>{el.classList.remove('sel');});
-  document.getElementById('lo-'+lang).classList.add('sel');
-}
-
-function listenItems(){
-  if(unsubItems)unsubItems();
-  const col=firebase.firestore.collection(db,'families/'+session.code+'/items');
-  unsubItems=firebase.firestore.onSnapshot(col,snap=>{items=snap.docs.map(d=>({id:d.id,...d.data()}));});
-}
-
-function listenTrips(){
-  if(unsubTrips)unsubTrips();
-  const q=firebase.firestore.query(firebase.firestore.collection(db,'families/'+session.code+'/trips'),firebase.firestore.orderBy('createdAt','desc'));
-  unsubTrips=firebase.firestore.onSnapshot(q,snap=>{
-    trips=snap.docs.map(d=>({id:d.id,...d.data()}));
-    activeTrip=trips.find(t=>!t.done);
-    renderShoppingList();renderTrips();
-  });
+  listenFamily();
+  listenItems();
+  listenTrips();
+  renderFamilyInfoCard();
+  loadDefaultItems(true); // silent load
 }
 
 function listenFamily(){
   if(unsubFamily)unsubFamily();
-  unsubFamily=firebase.firestore.onSnapshot(firebase.firestore.doc(db,'families',session.code),snap=>{if(snap.exists())familyData=snap.data();});
+  const {doc,onSnapshot}=fb();
+  unsubFamily=onSnapshot(doc(db(),'families',session.familyCode),(snap)=>{
+    if(snap.exists()){familyData=snap.data();document.getElementById('fam-name-hdr').textContent=familyData.name||'Family';renderFamilyInfoCard();}
+  });
 }
 
-// ===== ITEMS =====
+function listenItems(){
+  if(unsubItems)unsubItems();
+  const {collection,onSnapshot,query,orderBy}=fb();
+  const q=query(collection(db(),'families/'+session.familyCode+'/items'),orderBy('name'));
+  unsubItems=onSnapshot(q,(snap)=>{items=snap.docs.map(d=>({id:d.id,...d.data()}));renderItems();});
+}
+
+function listenTrips(){
+  if(unsubTrip)unsubTrip();
+  const {collection,onSnapshot,query,orderBy}=fb();
+  const q=query(collection(db(),'families/'+session.familyCode+'/trips'),orderBy('createdAt','desc'));
+  unsubTrip=onSnapshot(q,(snap)=>{
+    trips=snap.docs.map(d=>({id:d.id,...d.data()}));
+    const active=trips.find(t=>!t.done);
+    if(active){activeTripId=active.id;activeTrip=active;}
+    else{activeTripId=null;activeTrip=null;}
+    renderShoppingList();renderTrips();renderReports();
+  });
+}
+
+// ===================== ITEMS =====================
+function openAddItem(){
+  editingItemId=null;
+  document.getElementById('item-modal-title').textContent=t('add_item');
+  ['f-name','f-qty','f-price','f-notes'].forEach(id=>document.getElementById(id).value='');
+  populateCatSelect();openModal('modal-item');
+  setTimeout(()=>document.getElementById('f-name').focus(),200);
+}
+function openEditItem(id){
+  const item=items.find(i=>i.id===id);if(!item)return;
+  editingItemId=id;
+  document.getElementById('item-modal-title').textContent=t('edit_item');
+  document.getElementById('f-name').value=item.name;
+  document.getElementById('f-qty').value=item.qty||'';
+  document.getElementById('f-price').value=item.price||'';
+  document.getElementById('f-notes').value=item.notes||'';
+  populateCatSelect(item.catId);
+  document.getElementById('f-unit').value=item.unit||'pcs';
+  openModal('modal-item');
+}
 function populateCatSelect(sel){
   const s=document.getElementById('f-cat');s.innerHTML='';
-  CATS.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.icon+' '+c.name;if(sel===c.id)o.selected=true;s.appendChild(o);});
+  categories.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.icon+' '+c.name;if(sel===c.id)o.selected=true;s.appendChild(o);});
 }
-
 async function saveItem(){
   const name=document.getElementById('f-name').value.trim();
-  if(!name){toast('Name required!');return;}
-  const data={name,catId:document.getElementById('f-cat').value,qty:parseFloat(document.getElementById('f-qty').value)||1,unit:document.getElementById('f-unit').value,price:parseFloat(document.getElementById('f-price').value)||0};
-  const base='families/'+session.code+'/items';
-  if(editingItemId){
-    await firebase.firestore.updateDoc(firebase.firestore.doc(db,base,editingItemId),data);
-  } else {
-    await firebase.firestore.addDoc(firebase.firestore.collection(db,base),{...data,createdAt:firebase.firestore.serverTimestamp()});
-  }
-  closeM('m-item');
-  toast(editingItemId?t('updated'):t('added'));
+  if(!name){toast('Naam daalo!');return;}
+  const data={name,catId:document.getElementById('f-cat').value,qty:parseFloat(document.getElementById('f-qty').value)||1,unit:document.getElementById('f-unit').value,price:parseFloat(document.getElementById('f-price').value)||0,notes:document.getElementById('f-notes').value.trim(),updatedBy:session.memberName};
+  const base='families/'+session.familyCode+'/items';
+  if(editingItemId){await fb().updateDoc(fb().doc(db(),base,editingItemId),data);toast(t('updated'));}
+  else{await fb().addDoc(fb().collection(db(),base),{...data,createdAt:fb().serverTimestamp()});toast(t('added'));}
+  closeModal('modal-item');
 }
-
 async function deleteItem(id){
-  if(!confirm(t('delete_confirm')))return;
-  await firebase.firestore.deleteDoc(firebase.firestore.doc(db,'families/'+session.code+'/items',id));
+  if(!confirm('Delete?'))return;
+  await fb().deleteDoc(fb().doc(db(),'families/'+session.familyCode+'/items',id));
+  toast(t('deleted'));
+}
+async function loadDefaultItems(silent=false){
+  if(!items.length||!silent){
+    let added=0;
+    for(const di of DEFAULT_ITEMS){
+      if(!items.find(i=>i.name===di.name)){
+        await fb().addDoc(fb().collection(db(),'families/'+session.familyCode+'/items'),{...di,createdAt:fb().serverTimestamp(),updatedBy:session.memberName});
+        added++;
+      }
+    }
+    if(!silent){if(added>0)toast(t('defaults_done')+' ('+added+')');else toast(t('defaults_exist'));}
+  }
 }
 
-async function loadDefaultItems(){
-  const defaultItems=[{name:'Chawal',catId:'grain',qty:5,unit:'kg',price:60},{name:'Aata',catId:'grain',qty:5,unit:'kg',price:45},{name:'Toor Dal',catId:'grain',qty:1,unit:'kg',price:120},{name:'Moong Dal',catId:'grain',qty:500,unit:'g',price:70},{name:'Doodh',catId:'dairy',qty:1,unit:'L',price:28},{name:'Dahi',catId:'dairy',qty:500,unit:'g',price:35},{name:'Paneer',catId:'dairy',qty:200,unit:'g',price:80},{name:'Pyaz',catId:'veg',qty:2,unit:'kg',price:30},{name:'Aloo',catId:'veg',qty:2,unit:'kg',price:25},{name:'Tamatar',catId:'veg',qty:1,unit:'kg',price:40},{name:'Haldi',catId:'masala',qty:100,unit:'g',price:30},{name:'Tel',catId:'masala',qty:1,unit:'L',price:140},{name:'Namak',catId:'masala',qty:1,unit:'kg',price:20},{name:'Chini',catId:'masala',qty:1,unit:'kg',price:45},{name:'Maggi',catId:'noodle',qty:4,unit:'pack',price:56},{name:'Pasta',catId:'noodle',qty:1,unit:'pack',price:45},{name:'Parle-G',catId:'snack',qty:2,unit:'pack',price:20},{name:'Marie',catId:'snack',qty:1,unit:'pack',price:30},{name:'Honey',catId:'sauce',qty:250,unit:'g',price:120},{name:'Ketchup',catId:'sauce',qty:1,unit:'bottle',price:80},{name:'Sabun',catId:'hygiene',qty:4,unit:'pcs',price:80},{name:'Shampoo',catId:'hygiene',qty:1,unit:'bottle',price:150},{name:'Detergent',catId:'house',qty:1,unit:'kg',price:100},{name:'Phenyl',catId:'house',qty:1,unit:'bottle',price:80}];
-  let cnt=0;
-  for(const d of defaultItems){
-    if(!items.find(i=>i.name===d.name)){
-      await firebase.firestore.addDoc(firebase.firestore.collection(db,'families/'+session.code+'/items'),{...d,createdAt:firebase.firestore.serverTimestamp()});
-      cnt++;
-    }
-  }
-  toast(cnt+' items added!');
+function renderCatPills(containerId,active,callback){
+  const el=document.getElementById(containerId);if(!el)return;el.innerHTML='';
+  const all=document.createElement('button');all.className='pill'+(active==='all'?' active':'');all.textContent='🛒 All';all.onclick=()=>callback('all');el.appendChild(all);
+  categories.forEach(c=>{const b=document.createElement('button');b.className='pill'+(active===c.id?' active':'');b.innerHTML=c.icon+' '+c.name;b.onclick=()=>callback(c.id);el.appendChild(b);});
 }
 
 function renderItems(){
   const search=(document.getElementById('item-search')?.value||'').toLowerCase();
+  renderCatPills('cat-filter-items',catFilterItems,(c)=>{catFilterItems=c;renderItems();});
   const el=document.getElementById('items-list');
-  const filtered=items.filter(i=>!search||i.name.toLowerCase().includes(search));
+  const filtered=items.filter(i=>(catFilterItems==='all'||i.catId===catFilterItems)&&(!search||i.name.toLowerCase().includes(search)));
+  if(!filtered.length){el.innerHTML='<div class="emp"><i class="ti ti-package-off"></i><div>'+t('no_items')+'</div></div>';return;}
   const byCat={};filtered.forEach(i=>{if(!byCat[i.catId])byCat[i.catId]=[];byCat[i.catId].push(i);});
   el.innerHTML='';
   Object.keys(byCat).forEach(catId=>{
-    const cat=getCat(catId);
-    const card=document.createElement('div');card.className='card';
-    card.innerHTML='<div class="rf" style="margin-bottom:8px"><div style="font-size:18px">' +cat.icon+'</div><div style="font-size:13px;font-weight:600;flex:1">'+cat.name+'</div><span style="font-size:11px;background:#d8f3dc;color:#2d6a4f;padding:2px 8px;border-radius:12px">'+byCat[catId].length+'</span></div>';
+    const cat=getCat(catId);const sec=document.createElement('div');sec.className='card';
+    sec.innerHTML='<div class="rf" style="margin-bottom:8px"><div class="ci">'+cat.icon+'</div><div style="font-size:14px;font-weight:600;flex:1">'+cat.name+'</div><span class="bdg bg">'+byCat[catId].length+'</span></div>';
     byCat[catId].forEach(item=>{
       const row=document.createElement('div');row.className='ir';
-      row.innerHTML='<div class="ii"><div class="iname">'+item.name+'</div><div class="imeta">'+item.qty+' '+item.unit+'</div></div><div style="font-size:11px;color:var(--t3)">'+fp(item.price)+'</div><button class="btn btn-sm" style="padding:3px 6px" onclick="editItem(\''+item.id+'\')"><i class="ti ti-edit"></i></button><button class="btn btn-sm btn-r" style="padding:3px 6px" onclick="deleteItem(\''+item.id+'\')"><i class="ti ti-trash"></i></button>';
-      card.appendChild(row);
-    });
-    el.appendChild(card);
-  });
-}
-
-function editItem(id){
-  const item=items.find(i=>i.id===id);if(!item)return;
-  editingItemId=id;
-  document.getElementById('item-title').textContent='Edit Item';
-  document.getElementById('f-name').value=item.name;
-  document.getElementById('f-qty').value=item.qty||1;
-  document.getElementById('f-price').value=item.price||0;
-  populateCatSelect(item.catId);
-  document.getElementById('f-unit').value=item.unit||'pcs';
-  openM('m-item');
-}
-
-// ===== TRIPS =====
-async function createTrip(){
-  const name=document.getElementById('t-name').value.trim()||'Shopping '+new Date().toLocaleDateString();
-  const budget=parseFloat(document.getElementById('t-budget').value)||0;
-  const trip={name,budget,done:false,total:0,createdAt:firebase.firestore.serverTimestamp(),createdBy:session.name,items:[]};
-  await firebase.firestore.addDoc(firebase.firestore.collection(db,'families/'+session.code+'/trips'),trip);
-  closeM('m-trip');
-  document.getElementById('t-name').value='';
-  document.getElementById('t-budget').value='';
-  toast(t('trip_start'));
-}
-
-async function endTrip(){
-  if(!activeTrip)return;
-  if(!confirm(t('end_trip')+'?'))return;
-  const total=activeTrip.items?.reduce((s,i)=>s+(i.paidAmount||0),0)||0;
-  await firebase.firestore.updateDoc(firebase.firestore.doc(db,'families/'+session.code+'/trips',activeTrip.id),{done:true,total,endedBy:session.name,endedAt:new Date().toISOString()});
-  toast(t('trip_end'));
-}
-
-function renderShoppingList(){
-  const bar=document.getElementById('trip-bar'),actions=document.getElementById('trip-actions');
-  if(!activeTrip){
-    bar.innerHTML='<div class="fb"><div style="color:var(--t3);font-size:12px">'+t('no_trip')+'</div></div>';
-    actions.style.display='none';
-    document.getElementById('shopping-list').innerHTML='<div class="emp"><i class="ti ti-shopping-cart-off"></i><div>'+t('no_trip')+'</div></div>';
-    return;
-  }
-  const listItems=activeTrip.items||[];
-  const done=listItems.filter(i=>i.checked).length;
-  const total=listItems.reduce((s,i)=>s+(i.paidAmount||0),0);
-  bar.innerHTML='<div class="fb" style="margin-bottom:3px"><div><div style="font-size:13px;font-weight:700">'+activeTrip.name+'</div><div style="font-size:11px;color:var(--t3)">'+done+'/'+listItems.length+' · '+fp(total)+(activeTrip.budget?' / '+fp(activeTrip.budget):'')+'</div></div><button class="btn btn-sm btn-r" onclick="endTrip()"><i class="ti ti-flag"></i></button></div>';
-  if(activeTrip.budget){const pct=Math.min(100,Math.round(total/activeTrip.budget*100));bar.innerHTML+='<div style="height:4px;background:#e8f5e9;border-radius:2px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:'+(pct>90?'#e63946':'#2d6a4f')+'"></div></div>';}
-  actions.style.display='flex';
-  actions.innerHTML='<button class="btn btn-sm" onclick="selectAll()"><i class="ti ti-check"></i> '+t('select_all')+'</button><button class="btn btn-sm" onclick="unselectAll()"><i class="ti ti-x"></i> '+t('unmark_all')+'</button>';
-  const el=document.getElementById('shopping-list');
-  const byCat={};(listItems||[]).forEach(i=>{if(!byCat[i.catId])byCat[i.catId]=[];byCat[i.catId].push(i);});
-  el.innerHTML='';
-  Object.keys(byCat).forEach(catId=>{
-    const cat=getCat(catId);const catItems=byCat[catId];const doneInCat=catItems.filter(i=>i.checked).length;
-    const card=document.createElement('div');card.className='card';
-    card.innerHTML='<div class="rf" style="margin-bottom:8px"><div style="font-size:18px">'+cat.icon+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600">'+cat.name+'</div><div style="font-size:11px;color:var(--t3)">'+doneInCat+'/'+catItems.length+'</div></div></div>';
-    catItems.forEach(item=>{
-      const row=document.createElement('div');row.className='ir'+(item.checked?' done':'');
-      const btns='<div style="display:flex;gap:3px"><button class="quick-mark-btn" onclick="quickMark(\''+item.id+'\')">💰</button><button class="btn btn-sm btn-r" style="padding:3px 6px" onclick="removeItem(\''+item.id+'\')"><i class="ti ti-trash"></i></button></div>';
-      row.innerHTML='<div class="ick '+(item.checked?'on':'')+'" onclick="toggleMark(\''+item.id+'\')"><i class="ti ti-check"></i></div><div class="ii"><div class="iname">'+item.name+'</div><div class="imeta">'+item.qty+' '+item.unit+(item.checkedBy?'·'+item.checkedBy:'')+' '+(item.checked&&item.paidAmount?'<b style="color:#2d6a4f">'+fp(item.paidAmount)+'</b>':'')+'</div></div>'+btns;
-      card.appendChild(row);
-    });
-    el.appendChild(card);
-  });
-}
-
-async function toggleMark(itemId){
-  const item=activeTrip.items.find(i=>i.id===itemId);if(!item)return;
-  if(item.checked){item.checked=false;item.paidAmount=0;item.checkedBy=null;await saveTrip();toast(t('unmarked'));return;}
-  markingItemId=itemId;
-  document.getElementById('mark-title').textContent=item.name;
-  document.getElementById('mark-amt').value=item.price||'';
-  document.getElementById('mark-qty').value=item.qty||'';
-  openM('m-mark');
-}
-
-async function quickMark(itemId){
-  const item=activeTrip.items.find(i=>i.id===itemId);if(!item)return;
-  if(item.checked){item.checked=false;item.paidAmount=0;item.checkedBy=null;}else{item.checked=true;item.paidAmount=item.price||0;item.checkedBy=session.name;item.qty=item.qty||1;}
-  await saveTrip();
-  toast(item.checked?t('marked'):t('unmarked'));
-}
-
-async function saveMark(){
-  const item=activeTrip.items.find(i=>i.id===markingItemId);if(!item)return;
-  item.checked=true;
-  item.paidAmount=parseFloat(document.getElementById('mark-amt').value)||0;
-  const q=parseFloat(document.getElementById('mark-qty').value);if(q)item.qty=q;
-  item.checkedBy=session.name;
-  await saveTrip();
-  closeM('m-mark');
-  const done=activeTrip.items.filter(i=>i.checked).length;
-  toast(done===activeTrip.items.length?t('all_bought'):t('marked'));
-}
-
-async function removeItem(itemId){
-  activeTrip.items=activeTrip.items.filter(i=>i.id!==itemId);
-  await saveTrip();
-}
-
-async function selectAll(){
-  activeTrip.items.forEach(i=>{i.checked=true;i.paidAmount=i.paidAmount||i.price||0;i.checkedBy=session.name;});
-  await saveTrip();
-  toast(t('select_all'));
-}
-
-async function unselectAll(){
-  activeTrip.items.forEach(i=>{i.checked=false;i.paidAmount=0;i.checkedBy=null;});
-  await saveTrip();
-  toast(t('unmark_all'));
-}
-
-async function saveTrip(){
-  const total=activeTrip.items.reduce((s,i)=>s+(i.paidAmount||0),0);
-  await firebase.firestore.updateDoc(firebase.firestore.doc(db,'families/'+session.code+'/trips',activeTrip.id),{items:activeTrip.items,total});
-}
-
-function renderAddItemsModal(){
-  const el=document.getElementById('add-items-list');el.innerHTML='';
-  const byCat={};items.forEach(i=>{if(!byCat[i.catId])byCat[i.catId]=[];byCat[i.catId].push(i);});
-  Object.keys(byCat).forEach(catId=>{
-    const cat=getCat(catId);
-    const sec=document.createElement('div');
-    sec.innerHTML='<div style="font-size:11px;font-weight:600;color:var(--t3);margin:8px 0 4px">'+cat.icon+' '+cat.name+'</div>';
-    byCat[catId].forEach(item=>{
-      const inList=activeTrip?.items?.find(i=>i.masterItemId===item.id);
-      const btn=document.createElement('button');btn.className='btn btn-p'+(inList?' ✓':'');btn.style.width='100%';btn.style.marginBottom='4px';btn.style.justifyContent='flex-start';
-      btn.textContent=(inList?'✓ ':'') + item.name + ' ('+item.qty+' '+item.unit+')';
-      btn.onclick=async ()=>{
-        if(!inList){
-          const newItem={id:uid(),masterItemId:item.id,name:item.name,catId:item.catId,qty:item.qty,unit:item.unit,price:item.price||0,checked:false,paidAmount:0};
-          activeTrip.items.push(newItem);
-          await saveTrip();
-          btn.textContent='✓ '+item.name;
-          btn.classList.add('btn-p');
-        }
-      };
-      sec.appendChild(btn);
+      row.innerHTML='<div class="ii"><div class="iname">'+item.name+'</div><div class="imeta">'+item.qty+' '+item.unit+(item.notes?' · '+item.notes:'')+'</div></div><div style="font-size:12px;color:var(--t3);margin-right:4px">'+fp(item.price)+'</div><button class="btn btn-sm" onclick="openEditItem(\''+item.id+'\')"><i class="ti ti-edit"></i></button><button class="btn btn-sm btn-r" onclick="deleteItem(\''+item.id+'\')"><i class="ti ti-trash"></i></button>';
+      sec.appendChild(row);
     });
     el.appendChild(sec);
   });
 }
 
+// ===================== TRIPS =====================
+function openNewTrip(){openModal('modal-trip');setTimeout(()=>document.getElementById('t-name').focus(),200);}
+async function createTrip(){
+  const name=document.getElementById('t-name').value.trim()||'Shopping '+new Date().toLocaleDateString('en-IN');
+  const budget=parseFloat(document.getElementById('t-budget').value)||0;
+  const tripData={name,budget,done:false,total:0,createdBy:session.memberName,createdAt:fb().serverTimestamp(),listItems:[]};
+  await fb().addDoc(fb().collection(db(),'families/'+session.familyCode+'/trips'),tripData);
+  closeModal('modal-trip');document.getElementById('t-name').value='';document.getElementById('t-budget').value='';
+  toast(t('trip_start'));
+}
+async function endTrip(){
+  if(!activeTripId)return;if(!confirm(t('btn_end_trip')+'?'))return;
+  const total=activeTrip?.listItems?.reduce((s,i)=>s+(i.paidAmount||0),0)||0;
+  await fb().updateDoc(fb().doc(db(),'families/'+session.familyCode+'/trips',activeTripId),{done:true,total,endedBy:session.memberName,endedAt:new Date().toISOString()});
+  toast(t('trip_end'));
+}
+
+function renderShoppingList(){
+  const bar=document.getElementById('trip-bar'),actions=document.getElementById('trip-actions');
+  renderCatPills('cat-filter-list',catFilterList,(c)=>{catFilterList=c;renderShoppingList();});
+  if(!activeTrip){
+    bar.innerHTML='<div class="fb"><div style="color:var(--t3);font-size:13px">'+t('no_trip')+'</div><button class="btn btn-sm btn-p" onclick="openNewTrip()"><i class="ti ti-plus"></i> New</button></div>';
+    actions.style.display='none';
+    document.getElementById('shopping-list').innerHTML='<div class="emp"><i class="ti ti-shopping-cart-off"></i><div>'+t('no_trip')+'</div></div>';
+    return;
+  }
+  const listItems=activeTrip.listItems||[];
+  const done=listItems.filter(i=>i.checked).length;
+  const total=listItems.reduce((s,i)=>s+(i.paidAmount||0),0);
+  bar.innerHTML=`<div class="fb" style="margin-bottom:4px"><div style="font-size:14px;font-weight:700">${activeTrip.name}</div><button class="btn btn-sm btn-r" onclick="endTrip()"><i class="ti ti-flag"></i></button></div><div style="font-size:11px;color:var(--t3)">${done}/${listItems.length} items · ${fp(total)}${activeTrip.budget?' / '+fp(activeTrip.budget):''}</div>`;
+  if(activeTrip.budget){const pct=Math.min(100,Math.round(total/activeTrip.budget*100));bar.innerHTML+=`<div class="pb"><div class="pf" style="width:${pct}%;background:${pct>90?'var(--red)':'var(--green)'}"></div></div>`;}
+  actions.style.display='flex';
+  actions.innerHTML=`<button class="btn btn-sm" onclick="openPrevList()"><i class="ti ti-history"></i> <span data-t="btn_prev_list">${t('btn_prev_list')}</span></button><button class="btn btn-sm" onclick="selectAll()"><i class="ti ti-check"></i></button><button class="btn btn-sm" onclick="unselectAll()"><i class="ti ti-x"></i></button><button class="btn btn-sm btn-r" onclick="endTrip()"><i class="ti ti-flag"></i> <span>${t('btn_end_trip')}</span></button>`;
+  const el=document.getElementById('shopping-list');
+  const filtered=listItems.filter(i=>catFilterList==='all'||i.catId===catFilterList);
+  if(!filtered.length){el.innerHTML='<div class="emp"><i class="ti ti-basket-off"></i><div>'+t('no_items')+'</div></div>';return;}
+  const byCat={};filtered.forEach(i=>{if(!byCat[i.catId])byCat[i.catId]=[];byCat[i.catId].push(i);});
+  el.innerHTML='';
+  Object.keys(byCat).forEach(catId=>{
+    const cat=getCat(catId);const sec=document.createElement('div');sec.className='card';
+    const doneInCat=byCat[catId].filter(i=>i.checked).length;
+    sec.innerHTML=`<div class="rf" style="margin-bottom:8px"><div class="ci">${cat.icon}</div><div style="font-size:14px;font-weight:600;flex:1">${cat.name}</div><span class="bdg ${doneInCat===byCat[catId].length?'bg':'ba'}">${doneInCat}/${byCat[catId].length}</span></div>`;
+    byCat[catId].forEach(item=>{
+      const row=document.createElement('div');row.className='ir'+(item.checked?' done':'');
+      row.innerHTML=`<div class="ick ${item.checked?'on':''}" onclick="markItem('${item.id}')"><i class="ti ti-check" style="font-size:12px"></i></div><div class="ii"><div class="iname">${item.name}</div><div class="imeta">${item.qty} ${item.unit}${item.notes?' · '+item.notes:''}${item.checked&&item.paidAmount?' · <b style="color:var(--green)">'+fp(item.paidAmount)+'</b>':''} ${item.checkedBy?'<span style="color:var(--acc)">· '+item.checkedBy+'</span>':''}</div></div><div style="font-size:11px;color:var(--t3)">${fp(item.price)}</div><button class="btn btn-sm btn-r" style="padding:4px 6px" onclick="removeTripItem('${item.id}')"><i class="ti ti-trash"></i></button>`;
+      sec.appendChild(row);
+    });
+    el.appendChild(sec);
+  });
+}
+
+async function markItem(itemId){
+  if(!activeTrip)return;
+  const listItems=[...(activeTrip.listItems||[])];
+  const item=listItems.find(i=>i.id===itemId);if(!item)return;
+  if(item.checked){
+    item.checked=false;item.paidAmount=0;item.checkedBy=null;
+    await fb().updateDoc(fb().doc(db(),'families/'+session.familyCode+'/trips',activeTripId),{listItems});
+    toast(t('unmarked'));return;
+  }
+  markingItemId=itemId;
+  document.getElementById('mark-title').textContent=t('mark_as')+': '+item.name;
+  document.getElementById('mark-amount').value=item.price||'';
+  document.getElementById('mark-qty').value=item.qty||'';
+  openModal('modal-mark');setTimeout(()=>document.getElementById('mark-amount').focus(),200);
+}
+async function confirmMark(){
+  if(!activeTrip)return;
+  const listItems=[...(activeTrip.listItems||[])];
+  const item=listItems.find(i=>i.id===markingItemId);if(!item)return;
+  item.checked=true;
+  item.paidAmount=parseFloat(document.getElementById('mark-amount').value)||0;
+  const q=parseFloat(document.getElementById('mark-qty').value);if(q)item.qty=q;
+  item.checkedBy=session.memberName;
+  item.checkedAt=new Date().toISOString();
+  const total=listItems.reduce((s,i)=>s+(i.paidAmount||0),0);
+  await fb().updateDoc(fb().doc(db(),'families/'+session.familyCode+'/trips',activeTripId),{listItems,total});
+  closeModal('modal-mark');
+  const done=listItems.filter(i=>i.checked).length;
+  toast(done===listItems.length?t('all_done'):t('marked'));
+}
+async function removeTripItem(itemId){
+  if(!activeTrip)return;
+  const listItems=(activeTrip.listItems||[]).filter(i=>i.id!==itemId);
+  await fb().updateDoc(fb().doc(db(),'families/'+session.familyCode+'/trips',activeTripId),{listItems});
+}
+async function selectAll(){
+  if(!activeTrip)return;
+  const listItems=(activeTrip.listItems||[]).map(i=>({...i,checked:true,paidAmount:i.paidAmount||i.price||0,checkedBy:session.memberName}));
+  const total=listItems.reduce((s,i)=>s+(i.paidAmount||0),0);
+  await fb().updateDoc(fb().doc(db(),'families/'+session.familyCode+'/trips',activeTripId),{listItems,total});
+}
+async function unselectAll(){
+  if(!activeTrip)return;
+  const listItems=(activeTrip.listItems||[]).map(i=>({...i,checked:false,paidAmount:0,checkedBy:null}));
+  await fb().updateDoc(fb().doc(db(),'families/'+session.familyCode+'/trips',activeTripId),{listItems,total:0});
+}
+
+function openPrevList(){
+  const prev=trips.filter(t=>t.done&&t.listItems?.length);
+  if(!prev.length){toast('Koi pichli trip nahi');return;}
+  const lastTrip=prev[0];
+  const el=document.getElementById('prev-items-list');el.innerHTML='';
+  lastTrip.listItems.forEach(item=>{
+    const cat=getCat(item.catId);
+    const row=document.createElement('div');row.className='ir';
+    row.innerHTML=`<input type="checkbox" checked class="prev-check" data-id="${item.masterItemId||item.id}" data-name="${item.name}" data-catid="${item.catId}" data-qty="${item.qty}" data-unit="${item.unit}" data-price="${item.price||0}" data-notes="${item.notes||''}" style="width:18px;height:18px;accent-color:var(--green)"><div class="ii" style="margin-left:6px"><div class="iname">${item.name}</div><div class="imeta">${cat.icon} ${item.qty} ${item.unit}</div></div><div style="font-size:12px;color:var(--t3)">${fp(item.price)}</div>`;
+    el.appendChild(row);
+  });
+  openModal('modal-prev');
+}
+async function addPrevItems(){
+  if(!activeTrip)return;
+  const existing=activeTrip.listItems||[];
+  const checks=[...document.querySelectorAll('.prev-check:checked')];
+  let added=0;
+  const newItems=[...existing];
+  checks.forEach(c=>{
+    if(!existing.find(i=>i.masterItemId===c.dataset.id)){
+      newItems.push({id:uid(),masterItemId:c.dataset.id,name:c.dataset.name,catId:c.dataset.catid,qty:parseFloat(c.dataset.qty),unit:c.dataset.unit,price:parseFloat(c.dataset.price)||0,notes:c.dataset.notes,checked:false,paidAmount:0});
+      added++;
+    }
+  });
+  await fb().updateDoc(fb().doc(db(),'families/'+session.familyCode+'/trips',activeTripId),{listItems:newItems});
+  closeModal('modal-prev');toast(added+' '+t('added'));
+}
+
+async function addItemToTrip(itemId){
+  if(!activeTrip){toast(t('no_trip'));return;}
+  const item=items.find(i=>i.id===itemId);if(!item)return;
+  const listItems=activeTrip.listItems||[];
+  if(listItems.find(i=>i.masterItemId===itemId)){toast('Already in list');return;}
+  listItems.push({id:uid(),masterItemId:itemId,name:item.name,catId:item.catId,qty:item.qty,unit:item.unit,price:item.price||0,notes:item.notes||'',checked:false,paidAmount:0});
+  await fb().updateDoc(fb().doc(db(),'families/'+session.familyCode+'/trips',activeTripId),{listItems});
+  toast(item.name+' '+t('added'));
+}
+
+// ===================== TRIP HISTORY =====================
 function renderTrips(){
   const el=document.getElementById('trips-list');
-  const comp=trips.filter(t=>t.done);
-  if(!comp.length){el.innerHTML='<div class="emp"><i class="ti ti-history-off"></i><div>No trips</div></div>';return;}
+  const completed=trips.filter(t=>t.done);
+  if(!completed.length){el.innerHTML='<div class="emp"><i class="ti ti-history-off"></i><div>'+t('no_trips')+'</div></div>';return;}
   el.innerHTML='';
-  comp.forEach(trip=>{
-    const card=document.createElement('div');card.className='card';card.style.cursor='pointer';
+  completed.forEach(trip=>{
+    const listItems=trip.listItems||[];
+    const done=listItems.filter(i=>i.checked).length;
     const d=trip.createdAt?.toDate?trip.createdAt.toDate():new Date();
-    const items=trip.items||[];const done=items.filter(i=>i.checked).length;
-    card.innerHTML='<div class="fb" style="margin-bottom:3px"><div style="font-weight:600;font-size:13px">'+trip.name+'</div><span style="font-size:12px;background:#d8f3dc;color:#2d6a4f;padding:2px 8px;border-radius:12px">'+fp(trip.total)+'</span></div><div style="font-size:11px;color:var(--t3)">'+d.toLocaleDateString()+'  ·  '+done+'/'+items.length+' items</div>';
-    card.onclick=()=>showHistory(trip);
+    const card=document.createElement('div');card.className='card';card.style.cursor='pointer';
+    card.innerHTML=`<div class="fb" style="margin-bottom:5px"><div style="font-weight:600;font-size:14px">${trip.name}</div><span class="bdg bg">${fp(trip.total)}</span></div>
+    <div style="font-size:12px;color:var(--t3)">${d.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})} · ${done}/${listItems.length} items · ${t('by_label')} ${trip.createdBy||'?'}</div>
+    ${trip.budget?`<div class="pb" style="margin-top:5px"><div class="pf" style="width:${Math.min(100,Math.round((trip.total/trip.budget)*100))}%"></div></div>`:''}
+    <div style="margin-top:8px;text-align:right"><button class="btn btn-sm" onclick="showTripHistory('${trip.id}')"><i class="ti ti-eye"></i> Details</button></div>`;
     el.appendChild(card);
   });
 }
 
-function showHistory(trip){
-  const items=trip.items||[];
+function showTripHistory(tripId){
+  const trip=trips.find(t=>t.id===tripId);if(!trip)return;
+  const listItems=trip.listItems||[];
+  document.getElementById('hist-title').textContent=trip.name;
+  const el=document.getElementById('hist-content');
   const d=trip.createdAt?.toDate?trip.createdAt.toDate():new Date();
-  let html='<div style="font-size:11px;color:var(--t3);margin-bottom:8px">'+d.toLocaleDateString()+' · '+trip.createdBy+'</div>';
-  const byCat={};items.forEach(i=>{if(!byCat[i.catId])byCat[i.catId]=[];byCat[i.catId].push(i);});
+  let html=`<div style="font-size:12px;color:var(--t3);margin-bottom:12px">${d.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})} · ${t('by_label')} ${trip.createdBy||'?'}</div>`;
+  // Summary
+  const total=trip.total||0;const done=listItems.filter(i=>i.checked).length;
+  html+=`<div class="srow" style="margin-bottom:12px">
+    <div class="sc"><div class="sv">${fp(total)}</div><div class="sl">Spent</div></div>
+    <div class="sc"><div class="sv">${done}/${listItems.length}</div><div class="sl">Items</div></div>
+    ${trip.budget?`<div class="sc"><div class="sv" style="color:${total>trip.budget?'var(--red)':'var(--green)'}">₹${Math.abs(trip.budget-total).toLocaleString('en-IN')}</div><div class="sl">${total>trip.budget?'Over':'Saved'}</div></div>`:''}
+  </div>`;
+  // By category
+  const byCat={};listItems.forEach(i=>{if(!byCat[i.catId])byCat[i.catId]=[];byCat[i.catId].push(i);});
   Object.keys(byCat).forEach(catId=>{
     const cat=getCat(catId);const catItems=byCat[catId];
-    html+='<div style="margin-bottom:8px"><div style="font-size:12px;font-weight:600;margin-bottom:4px">'+cat.icon+' '+cat.name+'</div>';
-    catItems.forEach(i=>{html+='<div style="font-size:12px;padding:3px 0;border-bottom:1px solid #f0f0f0">'+(i.checked?'✅':'⬜')+' '+i.name+' · '+(i.checked?fp(i.paidAmount):'—')+(i.checkedBy?'<span style="font-size:10px;color:var(--t3)"> ·'+i.checkedBy+'</span>':'')+'</div>';});
+    const catTotal=catItems.reduce((s,i)=>s+(i.paidAmount||0),0);
+    html+=`<div style="margin-bottom:10px"><div class="rf" style="margin-bottom:6px"><div class="ci" style="width:28px;height:28px;font-size:16px">${cat.icon}</div><div style="font-size:13px;font-weight:600;flex:1">${cat.name}</div><span style="font-size:12px;color:var(--t3)">${fp(catTotal)}</span></div>`;
+    catItems.forEach(item=>{
+      html+=`<div class="hist-item"><div class="rf"><span class="${item.checked?'':''}"><span style="font-size:14px">${item.checked?'✅':'⬜'}</span> ${item.name}</span><span style="font-size:12px;font-weight:600;color:var(--green);margin-left:auto">${item.checked?fp(item.paidAmount):'—'}</span></div>${item.checked&&item.checkedBy?`<div style="font-size:11px;color:var(--t3);margin-top:2px">${t('by_label')} ${item.checkedBy}</div>`:''}</div>`;
+    });
     html+='</div>';
   });
-  document.getElementById('hist-content').innerHTML=html;
-  openM('m-history');
+  if(!listItems.length)html+='<div class="emp"><i class="ti ti-basket-off"></i><div>No items</div></div>';
+  el.innerHTML=html;
+  openModal('modal-history');
 }
 
+// ===================== REPORTS =====================
 function renderReports(){
   const done=trips.filter(t=>t.done&&t.total>0);
-  if(!done.length)return;
   const totalSpent=done.reduce((s,t)=>s+t.total,0);
   const avg=done.length?Math.round(totalSpent/done.length):0;
-  document.getElementById('report-stats').innerHTML='<div style="flex:1;background:#f0faf2;padding:8px;border-radius:10px;text-align:center"><div style="font-size:17px;font-weight:700;color:#2d6a4f">'+fp(totalSpent)+'</div><div style="font-size:10px;color:var(--t3)">Total</div></div><div style="flex:1;background:#f0faf2;padding:8px;border-radius:10px;text-align:center"><div style="font-size:17px;font-weight:700;color:#2d6a4f">'+done.length+'</div><div style="font-size:10px;color:var(--t3)">Trips</div></div><div style="flex:1;background:#f0faf2;padding:8px;border-radius:10px;text-align:center"><div style="font-size:17px;font-weight:700;color:#2d6a4f">'+fp(avg)+'</div><div style="font-size:10px;color:var(--t3)">Avg</div></div>';
+  const allItems=done.flatMap(t=>(t.listItems||[]).filter(i=>i.checked));
+  document.getElementById('report-stats').innerHTML=`<div class="sc"><div class="sv">₹${totalSpent.toLocaleString('en-IN')}</div><div class="sl">${t('total_spent')}</div></div><div class="sc"><div class="sv">${done.length}</div><div class="sl">${t('total_trips')}</div></div><div class="sc"><div class="sv">₹${avg.toLocaleString('en-IN')}</div><div class="sl">${t('avg_trip')}</div></div>`;
+  buildMonthlyChart(done);buildCatChart(allItems);buildTopItems(allItems);
+}
+function buildMonthlyChart(ts){
+  const map={};ts.forEach(t=>{const d=t.createdAt?.toDate?t.createdAt.toDate():new Date();const k=d.getFullYear()+'-'+(d.getMonth()+1).toString().padStart(2,'0');map[k]=(map[k]||0)+t.total;});
+  const keys=Object.keys(map).sort().slice(-6);
+  const ctx=document.getElementById('monthlyChart').getContext('2d');
+  if(monthlyChart)monthlyChart.destroy();
+  monthlyChart=new Chart(ctx,{type:'bar',data:{labels:keys.map(k=>{const[y,m]=k.split('-');return new Date(y,m-1).toLocaleDateString('en-IN',{month:'short',year:'2-digit'});}),datasets:[{data:keys.map(k=>Math.round(map[k])),backgroundColor:'#52b788',borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'₹'+v.toLocaleString('en-IN')},grid:{color:'#e8f5e9'}},x:{grid:{display:false}}}}});
+}
+function buildCatChart(its){
+  const map={};its.forEach(i=>{const c=getCat(i.catId);map[c.name]=(map[c.name]||0)+(i.paidAmount||0);});
+  const sorted=Object.entries(map).sort((a,b)=>b[1]-a[1]);
+  const ctx=document.getElementById('catChart').getContext('2d');
+  if(catChart)catChart.destroy();
+  catChart=new Chart(ctx,{type:'doughnut',data:{labels:sorted.map(x=>x[0]),datasets:[{data:sorted.map(x=>Math.round(x[1])),backgroundColor:['#2d6a4f','#40916c','#52b788','#74c69d','#0077b6','#e76f51','#f4a261','#8338ec','#e63946','#6c757d']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}}}}});
+}
+function buildTopItems(its){
+  const map={};its.forEach(i=>{if(!map[i.name])map[i.name]={name:i.name,total:0};map[i.name].total+=i.paidAmount||0;});
+  const sorted=Object.values(map).sort((a,b)=>b.total-a.total).slice(0,8);
+  const el=document.getElementById('top-items-list');el.innerHTML='';
+  const mx=sorted[0]?.total||1;
+  sorted.forEach((it,idx)=>{const row=document.createElement('div');row.style.marginBottom='8px';row.innerHTML=`<div class="fb" style="font-size:13px;margin-bottom:3px"><span>${idx+1}. ${it.name}</span><b style="color:var(--green)">${fp(it.total)}</b></div><div class="pb"><div class="pf" style="width:${Math.round(it.total/mx*100)}%"></div></div>`;el.appendChild(row);});
+  if(!sorted.length)el.innerHTML='<div style="text-align:center;color:var(--t3);font-size:13px;padding:16px">'+t('no_trips')+'</div>';
 }
 
+// ===================== FAMILY INFO =====================
+function renderFamilyInfoCard(){
+  if(!familyData||!session)return;
+  const el=document.getElementById('family-info-card');if(!el)return;
+  const members=Object.entries(familyData.members||{});
+  el.innerHTML=`<div class="rf" style="margin-bottom:10px"><div style="font-size:24px">👨‍👩‍👧</div><div style="margin-left:8px"><div style="font-weight:700;font-size:15px">${familyData.name}</div><div style="font-size:12px;color:var(--t3)">Code: <b style="color:var(--green);font-size:13px">${session.familyCode}</b> · ${members.length} members</div></div></div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">${members.map(([id,m])=>`<div style="display:flex;align-items:center;gap:5px;background:var(--gb);padding:5px 10px;border-radius:20px;font-size:12px"><div class="mavt" style="width:24px;height:24px;font-size:11px">${m.name?.charAt(0)||'?'}</div>${m.name}${m.isAdmin?' 👑':''}</div>`).join('')}</div>
+  ${session.isAdmin?`<div style="font-size:11px;color:var(--t3);margin-bottom:8px">Share this code with family: <b>${session.familyCode}</b> + PIN</div>`:''}
+  <div style="display:flex;gap:7px;flex-wrap:wrap">
+    <button class="btn btn-sm" onclick="openModal('modal-members')"><i class="ti ti-users"></i> Members</button>
+    ${session.isAdmin?`<button class="btn btn-sm" onclick="changePin()"><i class="ti ti-key"></i> Change PIN</button>`:''}
+    <button class="btn btn-sm btn-r" onclick="leaveFamily()"><i class="ti ti-logout"></i> Leave</button>
+  </div>`;
+}
+
+function showFamilyInfo(){openModal('modal-members');renderMembers();}
 function renderMembers(){
+  if(!familyData)return;
   const el=document.getElementById('members-list');el.innerHTML='';
-  Object.entries(familyData.members||{}).forEach(([id,m])=>{
-    const row=document.createElement('div');row.className='ir';
-    row.innerHTML='<div style="width:32px;height:32px;border-radius:50%;background:#d8f3dc;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#2d6a4f;flex-shrink:0">'+m.name.charAt(0)+'</div><div><div style="font-weight:500;font-size:12px">'+m.name+'</div><div style="font-size:10px;color:var(--t3)">'+(m.isAdmin?'Admin 👑':'Member')+(id===session.memberId?' (You)':'')+'</div></div>';
+  const members=Object.entries(familyData.members||{});
+  members.forEach(([id,m])=>{
+    const row=document.createElement('div');row.className='memrow';
+    row.innerHTML=`<div class="mavt">${m.name?.charAt(0)||'?'}</div><div style="flex:1"><div style="font-weight:500;font-size:14px">${m.name}</div><div style="font-size:11px;color:var(--t3)">${m.isAdmin?t('admin_badge'):t('member_badge')} · ${id===session.memberId?'(You)':''}</div></div>${session.isAdmin&&id!==session.memberId?`<button class="btn btn-sm btn-r" onclick="removeMember('${id}','${m.name}')"><i class="ti ti-trash"></i></button>`:''}`;
     el.appendChild(row);
   });
+  const adminSec=document.getElementById('admin-section');
+  if(adminSec)adminSec.style.display=session.isAdmin?'block':'none';
+}
+async function removeMember(id,name){
+  if(!confirm('Remove '+name+'?'))return;
+  const members={...familyData.members};delete members[id];
+  await fbSet('families/'+session.familyCode,{members});
+  toast(name+' removed');
+}
+function changePin(){closeModal('modal-members');openModal('modal-pin-change');setupPinBoxes('cur-pin-wrap');setupPinBoxes('new-pin-wrap');}
+async function savePinChange(){
+  const cur=getPinFromBoxes('cur-pin-wrap');const newp=getPinFromBoxes('new-pin-wrap');
+  if(cur.length!==4||newp.length!==4){toast('PIN 4 digits ka hona chahiye!');return;}
+  if(hashPin(cur)!==familyData.pinHash){toast('Current PIN galat hai!');return;}
+  await fbSet('families/'+session.familyCode,{pinHash:hashPin(newp)});
+  familyData.pinHash=hashPin(newp);closeModal('modal-pin-change');toast('PIN badal gaya! ✓');
+}
+function leaveFamily(){
+  if(!confirm('Family chhod dein?'))return;
+  session=null;localStorage.removeItem('sg_session');
+  if(unsubItems)unsubItems();if(unsubTrip)unsubTrip();if(unsubFamily)unsubFamily();
+  document.getElementById('app').style.display='none';
+  document.getElementById('ob-ov').style.display='flex';
 }
 
-function showMembers(){closeM('m-members');renderMembers();openM('m-members');}
-
-function renderFamilyInfo(){
-  const el=document.getElementById('fam-info-card');
-  const mems=Object.values(familyData.members||{});
-  el.innerHTML='<div class="rf" style="margin-bottom:8px"><div style="font-size:20px">👨‍👩‍👧</div><div><div style="font-weight:700;font-size:13px">'+familyData.name+'</div><div style="font-size:10px;color:var(--t3)">Code: '+session.code+' · '+mems.length+' members</div></div></div>';
+// ===================== CATEGORIES =====================
+function renderCatManager(){
+  const el=document.getElementById('cat-manager');if(!el)return;el.innerHTML='';
+  categories.forEach(cat=>{const row=document.createElement('div');row.className='fb';row.style.cssText='padding:7px 0;border-bottom:1px solid #f0f4f0';row.innerHTML=`<span>${cat.icon} ${cat.name}</span><button class="btn btn-sm btn-r" onclick="deleteCategory('${cat.id}')"><i class="ti ti-trash"></i></button>`;el.appendChild(row);});
+}
+function addCategory(){
+  const name=document.getElementById('new-cat-name').value.trim();const icon=document.getElementById('new-cat-icon').value.trim()||'📦';
+  if(!name){toast('Naam daalo!');return;}
+  categories.push({id:'cat_'+uid(),name,icon});
+  document.getElementById('new-cat-name').value='';document.getElementById('new-cat-icon').value='';
+  renderCatManager();toast('Category added!');
+}
+function deleteCategory(id){
+  if(items.some(i=>i.catId===id)){toast('Pehle items delete karo');return;}
+  categories=categories.filter(c=>c.id!==id);renderCatManager();
 }
 
+// ===================== EXPORT =====================
+function exportCSV(){
+  const done=trips.filter(t=>t.done);let csv='Trip,Date,Item,Category,Qty,Unit,Est Price,Paid,Bought By\n';
+  done.forEach(trip=>{(trip.listItems||[]).filter(i=>i.checked).forEach(i=>{const d=trip.createdAt?.toDate?trip.createdAt.toDate():new Date();csv+=`"${trip.name}","${d.toLocaleDateString()}","${i.name}","${getCat(i.catId).name}",${i.qty},${i.unit},${i.price||0},${i.paidAmount||0},"${i.checkedBy||''}"\n`;});});
+  const blob=new Blob([csv],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='grocery_'+new Date().toISOString().slice(0,10)+'.csv';a.click();toast(t('csv_done'));
+}
+
+// ===================== PAGE NAV =====================
 function showPage(p,btn){
   document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.nb').forEach(x=>x.classList.remove('active'));
   document.getElementById('page-'+p).classList.add('active');
   if(btn)btn.classList.add('active');
-  if(p==='list'){renderShoppingList();renderAddItemsModal();}
-  else if(p==='items'){renderItems();}
-  else if(p==='trips'){renderTrips();}
-  else if(p==='reports'){renderReports();}
-  else if(p==='settings'){renderFamilyInfo();}
+  const fab=document.getElementById('main-fab');
+  if(p==='list'){renderShoppingList();fab.style.display='flex';}
+  else if(p==='items'){renderItems();fab.style.display='flex';}
+  else if(p==='reports'){renderReports();fab.style.display='none';}
+  else if(p==='trips'){renderTrips();fab.style.display='none';}
+  else{fab.style.display='none';renderCatManager();}
 }
 
-function renderAll(){
-  setLang(lang);
-  showPage('list',document.querySelector('.nb'));
+function showPickFromItems(){
+  if(!items.length){toast('Pehle items add karo');return;}
+  const popup=document.createElement('div');popup.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:600;display:flex;align-items:flex-end;justify-content:center';
+  const byCat={};items.forEach(i=>{if(!byCat[i.catId])byCat[i.catId]=[];byCat[i.catId].push(i);});
+  let html=`<div style="background:#fff;border-radius:22px 22px 0 0;padding:16px 14px 32px;width:100%;max-width:430px;max-height:84vh;overflow-y:auto"><div class="fb" style="margin-bottom:12px"><div style="font-size:16px;font-weight:700">${t('nav_items')}</div><button onclick="this.closest('[style*=fixed]').remove()" style="border:none;background:none;font-size:22px;cursor:pointer;color:var(--t3)">×</button></div>`;
+  Object.keys(byCat).forEach(catId=>{const cat=getCat(catId);html+=`<div style="font-size:12px;font-weight:600;color:var(--t3);margin:10px 0 4px">${cat.icon} ${cat.name}</div>`;byCat[catId].forEach(item=>{const inList=activeTrip?.listItems?.find(i=>i.masterItemId===item.id);html+=`<div onclick="addItemToTrip('${item.id}');this.style.background='#d8f3dc'" style="padding:9px 10px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;background:${inList?'#d8f3dc':'#f0faf2'}"><span style="font-size:14px">${item.name}${inList?' ✓':''}</span><span style="font-size:11px;color:var(--t3)">${item.qty} ${item.unit}${item.price?' · ₹'+item.price:''}</span></div>`;});});
+  html+='</div>';popup.innerHTML=html;document.body.appendChild(popup);
 }
 
-function exportCSV(){
-  const done=trips.filter(t=>t.done);
-  let csv='Trip,Date,Item,Qty,Unit,Est,Paid,By\n';
-  done.forEach(t=>{const d=t.createdAt?.toDate?t.createdAt.toDate():new Date();(t.items||[]).filter(i=>i.checked).forEach(i=>{csv+='"'+t.name+'","'+d.toLocaleDateString()+'","'+i.name+'",'+i.qty+','+i.unit+','+i.price+','+i.paidAmount+',"'+i.checkedBy+'"\n';});});
-  const blob=new Blob([csv],{type:'text/csv'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='grocery_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
-}
-
-function logout(){
-  session=null;localStorage.removeItem('sg_session');
-  if(unsubItems)unsubItems();if(unsubTrips)unsubTrips();if(unsubFamily)unsubFamily();
-  document.getElementById('app').style.display='none';
-  showOnboard();
-}
-
-// ===== INIT =====
-window.addEventListener('DOMContentLoaded',()=>{
-  initFirebase();
+// ===================== BOOT =====================
+document.addEventListener('DOMContentLoaded',()=>{
   loadSession();
-  lang=localStorage.getItem('sg_lang')||'hi';
-  if(session?.code)initApp();
-  else showOnboard();
-  // Setup lang buttons
-  document.querySelectorAll('.lo').forEach(b=>{b.classList.remove('sel');});
-  document.getElementById('lo-'+lang).classList.add('sel');
-  document.querySelectorAll('.lb').forEach(b=>b.classList.remove('active'));
-  document.getElementById('lb-'+lang).classList.add('active');
+  document.addEventListener('firebaseReady',()=>{
+    if(session?.familyCode){
+      document.getElementById('ob-ov').style.display='none';
+      document.getElementById('fam-ov').style.display='none';
+      setLang(lang);
+      initApp();
+    } else {
+      document.getElementById('ob-ov').style.display='flex';
+    }
+    document.getElementById('main-fab').addEventListener('click',()=>{
+      const p=document.querySelector('.page.active').id;
+      if(p==='page-list'){if(!activeTrip)openNewTrip();else showPickFromItems();}
+      else openAddItem();
+    });
+    // PIN box setup for change modal
+    setupPinBoxes('cur-pin-wrap');setupPinBoxes('new-pin-wrap');
+  });
 });
 </script>
 </body>
