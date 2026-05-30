@@ -10,23 +10,24 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:Arial,sans-serif;background:#f4f7f4}
-.app{width:100%;height:100vh;display:flex;flex-direction:column;background:#fff;max-width:500px;margin:0 auto;position:relative}
-header{background:#2d6a4f;color:#fff;padding:12px 14px;display:flex;align-items:center;justify-content:space-between}
+.app{width:100%;height:100vh;display:flex;flex-direction:column;background:#fff;max-width:500px;margin:0 auto;position:relative;overflow:hidden}
+header{background:#2d6a4f;color:#fff;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .hdr-left{display:flex;align-items:center;gap:8px}
-.logo{font-size:20px}
-.hdr-text{font-size:14px;font-weight:700}
-.hdr-sub{font-size:10px;opacity:0.8;margin-top:2px}
-.lang-btn{padding:3px 6px;border-radius:4px;border:none;background:rgba(255,255,255,0.15);color:#fff;font-size:10px;font-weight:600;cursor:pointer;margin-right:3px}
+.logo{font-size:22px}
+.hdr-text{font-size:14px;font-weight:700;line-height:1.2}
+.hdr-sub{font-size:10px;opacity:0.8}
+.lang-btns{display:flex;gap:3px}
+.lang-btn{padding:3px 6px;border-radius:4px;border:none;background:rgba(255,255,255,0.15);color:#fff;font-size:10px;font-weight:600;cursor:pointer}
 .lang-btn.active{background:rgba(255,255,255,0.9);color:#2d6a4f}
-nav{display:flex;background:#fff;border-bottom:1px solid #c8e6c9;overflow-x:auto}
+nav{display:flex;background:#fff;border-bottom:1px solid #c8e6c9;flex-shrink:0}
 .nav-btn{flex:1;min-width:50px;padding:10px 2px 8px;border:none;background:none;font-size:9px;color:#7a9e7e;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
 .nav-btn i{font-size:16px}
 .nav-btn.active{color:#2d6a4f;border-bottom:2.5px solid #2d6a4f}
 .content{flex:1;overflow-y:auto;padding:12px}
 .card{background:#fff;border:1px solid #c8e6c9;border-radius:12px;padding:12px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,0.08)}
-.inp{width:100%;padding:8px 10px;border:1.5px solid #c8e6c9;border-radius:6px;font-size:13px;outline:none}
+.inp{width:100%;padding:8px 10px;border:1.5px solid #c8e6c9;border-radius:6px;font-size:13px;outline:none;background:#fff}
 .inp:focus{border-color:#2d6a4f}
-.btn{display:inline-flex;align-items:center;gap:4px;padding:7px 12px;border-radius:6px;border:1.5px solid #c8e6c9;background:#fff;color:#2d6a4f;font-size:12px;font-weight:500;cursor:pointer}
+.btn{display:inline-flex;align-items:center;gap:4px;padding:8px 12px;border-radius:6px;border:1.5px solid #c8e6c9;background:#fff;color:#2d6a4f;font-size:12px;font-weight:500;cursor:pointer}
 .btn:active{background:#d8f3dc}
 .btn-p{background:#2d6a4f;color:#fff;border-color:#2d6a4f}
 .btn-r{color:#e63946;border-color:#ffc1c5}
@@ -39,8 +40,7 @@ nav{display:flex;background:#fff;border-bottom:1px solid #c8e6c9;overflow-x:auto
 .modal-close{position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:50%;background:#f0faf2;border:none;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center}
 .fr{margin-bottom:10px}
 .fr label{display:block;font-size:11px;font-weight:600;color:#7a9e7e;margin-bottom:4px}
-.item-grid{display:flex;flex-direction:column;gap:6px}
-.item-btn{background:#f0faf2;border:1px solid #c8e6c9;padding:10px;border-radius:8px;text-align:left;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:space-between;font-size:13px}
+.item-btn{background:#f0faf2;border:1px solid #c8e6c9;padding:10px;border-radius:8px;text-align:left;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:space-between;font-size:13px;margin-bottom:6px}
 .item-btn:active{background:#d8f3dc}
 .item-btn.added{background:#d8f3dc;color:#2d6a4f;font-weight:600}
 .ir{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f5f5f5}
@@ -51,7 +51,7 @@ nav{display:flex;background:#fff;border-bottom:1px solid #c8e6c9;overflow-x:auto
 .iname{font-size:13px;font-weight:500}
 .imeta{font-size:11px;color:#7a9e7e;margin-top:1px}
 .ir.done .iname{text-decoration:line-through;color:#7a9e7e}
-.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:#1a2e1a;color:#fff;padding:9px 18px;border-radius:18px;font-size:12px;opacity:0;z-index:1000;transition:all 0.3s;pointer-events:none}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:#1a2e1a;color:#fff;padding:9px 18px;border-radius:18px;font-size:12px;opacity:0;z-index:1000;transition:all 0.3s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .onboard{position:fixed;inset:0;background:linear-gradient(135deg,#2d6a4f,#40916c);z-index:900;display:flex;align-items:center;justify-content:center;padding:16px}
 .onboard-card{background:#fff;border-radius:20px;padding:24px;width:100%;max-width:340px;text-align:center}
@@ -60,10 +60,12 @@ nav{display:flex;background:#fff;border-bottom:1px solid #c8e6c9;overflow-x:auto
 .pin-wrap{display:flex;gap:8px;justify-content:center;margin:12px 0}
 .pin-box{width:48px;height:52px;border:2px solid #c8e6c9;border-radius:8px;font-size:22px;text-align:center;outline:none}
 .pin-box:focus{border-color:#2d6a4f}
+.btn-grid{display:flex;gap:6px;flex-wrap:wrap}
+.btn-block{flex:1;min-width:100px}
 .emp{text-align:center;padding:32px 14px;color:#7a9e7e}
 .emp i{font-size:40px;color:#c8e6c9;display:block;margin-bottom:8px}
 .page{display:none}
-.page.show{display:block}
+.page.active{display:block}
 </style>
 </head>
 <body>
@@ -74,7 +76,7 @@ nav{display:flex;background:#fff;border-bottom:1px solid #c8e6c9;overflow-x:auto
     <div class="logo">🛒</div>
     <div><div class="hdr-text">Smart Grocery</div><div class="hdr-sub" id="fam-name-hdr">Family</div></div>
   </div>
-  <div>
+  <div class="lang-btns">
     <button class="lang-btn" onclick="setLang('hi')" id="lb-hi">हि</button>
     <button class="lang-btn" onclick="setLang('mr')" id="lb-mr">म</button>
     <button class="lang-btn" onclick="setLang('en')" id="lb-en">EN</button>
@@ -82,14 +84,14 @@ nav{display:flex;background:#fff;border-bottom:1px solid #c8e6c9;overflow-x:auto
 </header>
 
 <nav>
-  <button class="nav-btn active" data-page="list"><i class="ti ti-list-check"></i>List</button>
-  <button class="nav-btn" data-page="items"><i class="ti ti-category"></i>Items</button>
-  <button class="nav-btn" data-page="trips"><i class="ti ti-shopping-bag"></i>Trips</button>
-  <button class="nav-btn" data-page="settings"><i class="ti ti-settings"></i>Settings</button>
+  <button class="nav-btn active" onclick="goPage('list')"><i class="ti ti-list-check"></i>List</button>
+  <button class="nav-btn" onclick="goPage('items')"><i class="ti ti-category"></i>Items</button>
+  <button class="nav-btn" onclick="goPage('trips')"><i class="ti ti-shopping-bag"></i>Trips</button>
+  <button class="nav-btn" onclick="goPage('settings')"><i class="ti ti-settings"></i>Settings</button>
 </nav>
 
 <div class="content">
-  <div class="page show" id="page-list">
+  <div class="page active" id="page-list">
     <div id="trip-info" class="card"></div>
     <div id="trip-actions" style="display:none;flex-wrap:wrap;gap:5px;margin-bottom:8px"></div>
     <div id="shopping-list"></div>
@@ -97,7 +99,7 @@ nav{display:flex;background:#fff;border-bottom:1px solid #c8e6c9;overflow-x:auto
   
   <div class="page" id="page-items">
     <div style="display:flex;gap:6px;margin-bottom:8px">
-      <input class="inp" id="item-search" placeholder="🔍 Search..." style="flex:1">
+      <input class="inp" id="item-search" placeholder="🔍 Search..." style="flex:1" oninput="renderItems()">
     </div>
     <div id="items-list"></div>
   </div>
@@ -111,24 +113,25 @@ nav{display:flex;background:#fff;border-bottom:1px solid #c8e6c9;overflow-x:auto
     <div style="font-size:11px;font-weight:600;color:#7a9e7e;text-transform:uppercase;margin-bottom:6px">Family</div>
     <div class="card">
       <div id="fam-info"></div>
-      <button class="btn btn-r" style="width:100%;margin-top:10px" onclick="logout()"><i class="ti ti-logout"></i> Leave Family</button>
+      <button class="btn btn-r" style="width:100%;margin-top:10px" onclick="logout()"><i class="ti ti-logout"></i> Leave</button>
     </div>
   </div>
 </div>
 
-<button class="fab" id="fab" onclick="handleFab()"><i class="ti ti-plus"></i></button>
+<button class="fab" id="fab" onclick="fabClick()"><i class="ti ti-plus"></i></button>
 </div>
 
 <!-- ONBOARD -->
-<div id="onboard" class="onboard">
+<div id="onboard" class="onboard" style="display:flex">
 <div class="onboard-card">
   <div style="font-size:32px;margin-bottom:8px">🛒</div>
   <div style="font-size:18px;font-weight:700;margin-bottom:3px">Smart Grocery</div>
   <div style="font-size:12px;color:#666;margin-bottom:16px">Family Shopping</div>
   <div style="display:flex;gap:6px;margin-bottom:16px" id="lang-sel"></div>
-  <div style="display:flex;gap:6px">
-    <button class="btn btn-p" style="flex:1;justify-content:center" onclick="showSetup('create')"><i class="ti ti-plus"></i> Create</button>
-    <button class="btn" style="flex:1;justify-content:center" onclick="showSetup('join')"><i class="ti ti-login"></i> Join</button>
+  <div class="btn-grid">
+    <button class="btn btn-p btn-block" onclick="showSetup('login')"><i class="ti ti-login"></i> Login</button>
+    <button class="btn btn-p btn-block" onclick="showSetup('create')"><i class="ti ti-plus"></i> Create</button>
+    <button class="btn btn-block" onclick="showSetup('join')"><i class="ti ti-users"></i> Join</button>
   </div>
 </div>
 </div>
@@ -136,8 +139,8 @@ nav{display:flex;background:#fff;border-bottom:1px solid #c8e6c9;overflow-x:auto
 <!-- MODALS -->
 <div class="modal" id="m-item">
 <div class="modal-sheet">
-  <button class="modal-close" onclick="closeModal('m-item')"><i class="ti ti-x"></i></button>
-  <div class="modal-title" id="item-title">Add Item</div>
+  <button class="modal-close" onclick="closeM('m-item')"><i class="ti ti-x"></i></button>
+  <div class="modal-title">Add Item</div>
   <div class="fr"><label>Name *</label><input class="inp" id="f-name"></div>
   <div class="fr"><label>Category *</label><select class="inp" id="f-cat"></select></div>
   <div style="display:flex;gap:6px">
@@ -146,7 +149,7 @@ nav{display:flex;background:#fff;border-bottom:1px solid #c8e6c9;overflow-x:auto
   </div>
   <div class="fr"><label>Price (₹)</label><input class="inp" id="f-price" type="number" placeholder="0"></div>
   <div style="display:flex;gap:6px;margin-top:10px">
-    <button class="btn" style="flex:1" onclick="closeModal('m-item')">Cancel</button>
+    <button class="btn" style="flex:1" onclick="closeM('m-item')">Cancel</button>
     <button class="btn btn-p" style="flex:1" onclick="saveItem()">Save</button>
   </div>
 </div>
@@ -154,7 +157,7 @@ nav{display:flex;background:#fff;border-bottom:1px solid #c8e6c9;overflow-x:auto
 
 <div class="modal" id="m-trip">
 <div class="modal-sheet">
-  <button class="modal-close" onclick="closeModal('m-trip')"><i class="ti ti-x"></i></button>
+  <button class="modal-close" onclick="closeM('m-trip')"><i class="ti ti-x"></i></button>
   <div class="modal-title">New Trip</div>
   <div class="fr"><label>Name</label><input class="inp" id="t-name" placeholder="Weekly Shopping"></div>
   <div class="fr"><label>Budget (₹)</label><input class="inp" id="t-budget" type="number" placeholder="0"></div>
@@ -164,20 +167,20 @@ nav{display:flex;background:#fff;border-bottom:1px solid #c8e6c9;overflow-x:auto
 
 <div class="modal" id="m-add-items">
 <div class="modal-sheet" style="max-height:85vh">
-  <button class="modal-close" onclick="closeModal('m-add-items')"><i class="ti ti-x"></i></button>
+  <button class="modal-close" onclick="closeM('m-add-items')"><i class="ti ti-x"></i></button>
   <div class="modal-title">Add Items to Trip</div>
-  <div style="font-size:11px;color:#7a9e7e;margin-bottom:8px">Tap any item to add</div>
-  <div class="item-grid" id="add-items-list"></div>
+  <div style="font-size:11px;color:#7a9e7e;margin-bottom:8px">Tap any item to add to current trip</div>
+  <div id="add-items-content"></div>
 </div>
 </div>
 
 <div class="modal" id="m-mark">
 <div class="modal-sheet">
-  <button class="modal-close" onclick="closeModal('m-mark')"><i class="ti ti-x"></i></button>
+  <button class="modal-close" onclick="closeM('m-mark')"><i class="ti ti-x"></i></button>
   <div class="modal-title" id="mark-title">Mark Item</div>
   <div class="fr"><label>Amount Paid (₹)</label><input class="inp" id="mark-amt" type="number" placeholder="0" autofocus></div>
   <div style="display:flex;gap:6px;margin-top:10px">
-    <button class="btn" style="flex:1" onclick="closeModal('m-mark')">Cancel</button>
+    <button class="btn" style="flex:1" onclick="closeM('m-mark')">Cancel</button>
     <button class="btn btn-p" style="flex:1" onclick="saveMark()">✓ Mark</button>
   </div>
 </div>
@@ -185,7 +188,7 @@ nav{display:flex;background:#fff;border-bottom:1px solid #c8e6c9;overflow-x:auto
 
 <div class="modal" id="m-setup">
 <div class="modal-sheet">
-  <button class="modal-close" onclick="closeModal('m-setup')"><i class="ti ti-x"></i></button>
+  <button class="modal-close" onclick="closeM('m-setup')"><i class="ti ti-x"></i></button>
   <div id="setup-content"></div>
 </div>
 </div>
@@ -204,19 +207,20 @@ const firebaseConfig = {
 
 const CATS=[{id:'grain',name:'Anaj',icon:'🌾'},{id:'dairy',name:'Dairy',icon:'🥛'},{id:'veg',name:'Sabzi',icon:'🥦'},{id:'masala',name:'Masale',icon:'🌶️'},{id:'snack',name:'Snacks',icon:'🍪'},{id:'sauce',name:'Sauces',icon:'🍯'},{id:'noodle',name:'Noodles',icon:'🍜'},{id:'hygiene',name:'Soap',icon:'🧴'},{id:'house',name:'Home',icon:'🧹'},{id:'other',name:'Other',icon:'📦'}];
 
-let lang='hi',session=null,db=null,items=[],trips=[],activeTrip=null;
-let currentPage='list',editingItemId=null,markingItemId=null;
+let lang='hi',session=null,db=null,items=[],trips=[],activeTrip=null,currentPage='list';
+let editingItemId=null,markingItemId=null;
 
-function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2200);}
-function openModal(id){document.getElementById(id).classList.add('open');}
-function closeModal(id){document.getElementById(id).classList.remove('open');}
-function getCat(id){return CATS.find(c=>c.id===id)||{name:'Other',icon:'📦'};}
-function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2);}
-function fp(p){return p?'₹'+Number(p).toLocaleString('en-IN'):'—';}
-function hashPin(p){let h=0;for(let i=0;i<p.length;i++){h=((h<<5)-h)+p.charCodeAt(i);h|=0;}return Math.abs(h).toString(16);}
-function getPin(wid){return [...document.querySelectorAll('#'+wid+' .pin-box')].map(b=>b.value).join('');}
+const t=k=>({hi:{},mr:{},en:{}}[lang]?.[k]||k);
+const getCat=id=>CATS.find(c=>c.id===id)||{name:'Other',icon:'📦'};
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2);
+const fp=p=>p?'₹'+Number(p).toLocaleString('en-IN'):'—';
+const toast=msg=>{const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2200);};
+const openM=id=>document.getElementById(id).classList.add('open');
+const closeM=id=>document.getElementById(id).classList.remove('open');
+const hashPin=p=>{let h=0;for(let i=0;i<p.length;i++){h=((h<<5)-h)+p.charCodeAt(i);h|=0;}return Math.abs(h).toString(16);};
+const getPin=wid=>[...document.querySelectorAll('#'+wid+' .pin-box')].map(b=>b.value).join('');
 
-function setLang(l){lang=l;localStorage.setItem('sg_lang',l);render();}
+function setLang(l){lang=l;localStorage.setItem('sg_lang',l);refreshUI();}
 function saveSess(){localStorage.setItem('sg_sess',JSON.stringify(session));}
 function loadSess(){try{const s=localStorage.getItem('sg_sess');if(s)session=JSON.parse(s);}catch(e){}}
 
@@ -229,50 +233,66 @@ function init(){
   if(session?.code){
     showApp();
     listen();
-    render();
+    refreshUI();
   } else {
-    showOnboard();
+    setupOnboard();
   }
 }
 
-function showOnboard(){
-  document.getElementById('app').style.display='none';
-  document.getElementById('onboard').style.display='flex';
+function setupOnboard(){
   const lo=document.getElementById('lang-sel');
   lo.innerHTML=`<div class="lang-opt sel" onclick="setLang('hi')"><div style="font-size:20px">🇮🇳</div><div style="font-size:11px;font-weight:700">हिंदी</div></div>
   <div class="lang-opt" onclick="setLang('mr')"><div style="font-size:20px">🇮🇳</div><div style="font-size:11px;font-weight:700">मराठी</div></div>
   <div class="lang-opt" onclick="setLang('en')"><div style="font-size:20px">🇬🇧</div><div style="font-size:11px;font-weight:700">English</div></div>`;
   [...lo.querySelectorAll('.lang-opt')].forEach(o=>o.classList.remove('sel'));
-  lo.querySelector(`[onclick*="${lang}"]`)?.classList.add('sel');
+  lo.querySelector('[onclick*="'+lang+'"]')?.classList.add('sel');
 }
 
-function showApp(){
-  document.getElementById('onboard').style.display='none';
-  document.getElementById('app').style.display='flex';
-}
+function showApp(){document.getElementById('onboard').style.display='none';document.getElementById('app').style.display='flex';}
 
 function showSetup(mode){
   const el=document.getElementById('setup-content');
-  if(mode==='create'){
+  if(mode==='login'){
+    el.innerHTML=`<h2 style="font-size:16px;font-weight:700;margin-bottom:12px">Login to Family</h2>
+    <div class="fr"><label>Family Code</label><input class="inp" id="lg-code" placeholder="e.g. SHARMA123" style="text-transform:uppercase"></div>
+    <div class="fr"><label>PIN</label><div class="pin-wrap" id="lg-pin"><input class="pin-box" type="password" inputmode="numeric" maxlength="1"><input class="pin-box" type="password" inputmode="numeric" maxlength="1"><input class="pin-box" type="password" inputmode="numeric" maxlength="1"><input class="pin-box" type="password" inputmode="numeric" maxlength="1"></div></div>
+    <div class="fr"><label>Your Name (for this device)</label><input class="inp" id="lg-name"></div>
+    <button class="btn btn-p" style="width:100%;margin-top:8px" onclick="loginFamily()">Login 👤</button>`;
+    setupPin('lg-pin');
+  } else if(mode==='create'){
     el.innerHTML=`<h2 style="font-size:16px;font-weight:700;margin-bottom:12px">Create Family</h2>
     <div class="fr"><label>Your Name</label><input class="inp" id="fs-name"></div>
     <div class="fr"><label>Family Name</label><input class="inp" id="fs-fam"></div>
-    <div class="fr"><label>Family Code</label><input class="inp" id="fs-code" style="text-transform:uppercase"></div>
+    <div class="fr"><label>Family Code (unique)</label><input class="inp" id="fs-code" style="text-transform:uppercase"></div>
     <div class="fr"><label>PIN (4 digits)</label><div class="pin-wrap" id="fs-pin"><input class="pin-box" type="password" inputmode="numeric" maxlength="1"><input class="pin-box" type="password" inputmode="numeric" maxlength="1"><input class="pin-box" type="password" inputmode="numeric" maxlength="1"><input class="pin-box" type="password" inputmode="numeric" maxlength="1"></div></div>
-    <button class="btn btn-p" style="width:100%;margin-top:8px" onclick="createFamily()">Create Family</button>`;
+    <button class="btn btn-p" style="width:100%;margin-top:8px" onclick="createFamily()">Create Family 👨‍👩‍👧</button>`;
     setupPin('fs-pin');
   } else {
-    el.innerHTML=`<h2 style="font-size:16px;font-weight:700;margin-bottom:12px">Join Family</h2>
+    el.innerHTML=`<h2 style="font-size:16px;font-weight:700;margin-bottom:12px">Join Existing Family</h2>
     <div class="fr"><label>Your Name</label><input class="inp" id="fj-name"></div>
     <div class="fr"><label>Family Code</label><input class="inp" id="fj-code" style="text-transform:uppercase"></div>
     <div class="fr"><label>PIN</label><div class="pin-wrap" id="fj-pin"><input class="pin-box" type="password" inputmode="numeric" maxlength="1"><input class="pin-box" type="password" inputmode="numeric" maxlength="1"><input class="pin-box" type="password" inputmode="numeric" maxlength="1"><input class="pin-box" type="password" inputmode="numeric" maxlength="1"></div></div>
-    <button class="btn btn-p" style="width:100%;margin-top:8px" onclick="joinFamily()">Join Family</button>`;
+    <button class="btn btn-p" style="width:100%;margin-top:8px" onclick="joinFamily()">Join Family 👥</button>`;
     setupPin('fj-pin');
   }
-  openModal('m-setup');
+  openM('m-setup');
 }
 
 function setupPin(wid){setTimeout(()=>{[...document.querySelectorAll('#'+wid+' .pin-box')].forEach((b,i)=>{b.addEventListener('input',()=>{if(b.value&&i<3)document.querySelectorAll('#'+wid+' .pin-box')[i+1].focus();});b.addEventListener('keydown',e=>{if(e.key==='Backspace'&&!b.value&&i>0)document.querySelectorAll('#'+wid+' .pin-box')[i-1].focus();});});},100);}
+
+async function loginFamily(){
+  const code=document.getElementById('lg-code').value.trim().toUpperCase();
+  const pin=getPin('lg-pin');
+  const name=document.getElementById('lg-name').value.trim();
+  if(!code||pin.length!==4||!name){toast('Fill all!');return;}
+  const snap=await firebase.firestore.getDoc(firebase.firestore.doc(db,'families',code));
+  if(!snap.exists()){toast('Code not found!');return;}
+  const data=snap.data();
+  if(data.pinHash!==hashPin(pin)){toast('Wrong PIN!');return;}
+  session={familyCode:code,memberName:name,isAdmin:false};
+  saveSess();
+  location.reload();
+}
 
 async function createFamily(){
   const n=document.getElementById('fs-name').value.trim(),f=document.getElementById('fs-fam').value.trim(),c=document.getElementById('fs-code').value.trim().toUpperCase(),p=getPin('fs-pin');
@@ -280,7 +300,7 @@ async function createFamily(){
   const m=uid(),d={name:f,code:c,pinHash:hashPin(p),adminId:m,members:{}};
   d.members[m]={name:n,isAdmin:true};
   await firebase.firestore.setDoc(firebase.firestore.doc(db,'families',c),d);
-  session={memberId:m,memberName:n,familyCode:c,isAdmin:true};
+  session={familyCode:c,memberName:n,isAdmin:true};
   saveSess();
   location.reload();
 }
@@ -288,93 +308,114 @@ async function createFamily(){
 async function joinFamily(){
   const n=document.getElementById('fj-name').value.trim(),c=document.getElementById('fj-code').value.trim().toUpperCase(),p=getPin('fj-pin');
   if(!n||!c||p.length!==4){toast('Fill all!');return;}
-  const s=await firebase.firestore.getDoc(firebase.firestore.doc(db,'families',c));
-  if(!s.exists()){toast('Not found!');return;}
-  const d=s.data();
-  if(d.pinHash!==hashPin(p)){toast('Wrong PIN!');return;}
+  const snap=await firebase.firestore.getDoc(firebase.firestore.doc(db,'families',c));
+  if(!snap.exists()){toast('Not found!');return;}
+  const data=snap.data();
+  if(data.pinHash!==hashPin(p)){toast('Wrong PIN!');return;}
   const m=uid();
   await firebase.firestore.updateDoc(firebase.firestore.doc(db,'families',c),{['members.'+m]:{name:n,isAdmin:false}});
-  session={memberId:m,memberName:n,familyCode:c,isAdmin:false};
+  session={familyCode:c,memberName:n,isAdmin:false};
   saveSess();
   location.reload();
 }
 
 function listen(){
-  firebase.firestore.onSnapshot(firebase.firestore.query(firebase.firestore.collection(db,'families/'+session.familyCode+'/trips'),firebase.firestore.orderBy('createdAt','desc')),snap=>{trips=snap.docs.map(d=>({id:d.id,...d.data()}));activeTrip=trips.find(t=>!t.done);});
-  firebase.firestore.onSnapshot(firebase.firestore.collection(db,'families/'+session.familyCode+'/items'),snap=>{items=snap.docs.map(d=>({id:d.id,...d.data()}));});
+  firebase.firestore.onSnapshot(firebase.firestore.query(firebase.firestore.collection(db,'families/'+session.familyCode+'/trips'),firebase.firestore.orderBy('createdAt','desc')),snap=>{
+    trips=snap.docs.map(d=>({id:d.id,...d.data()}));
+    activeTrip=trips.find(t=>!t.done);
+    console.log('Trips updated:',trips.length,'Active:',activeTrip?.name);
+  });
+  firebase.firestore.onSnapshot(firebase.firestore.collection(db,'families/'+session.familyCode+'/items'),snap=>{
+    items=snap.docs.map(d=>({id:d.id,...d.data()}));
+    console.log('Items updated:',items.length);
+  });
 }
 
-function handleFab(){
+function fabClick(){
+  console.log('FAB clicked. Page:',currentPage,'ActiveTrip:',activeTrip?.name);
   if(currentPage==='list'){
-    if(!activeTrip)openModal('m-trip');
-    else renderAddItems();
+    if(!activeTrip){openM('m-trip');}
+    else {buildAddItems();openM('m-add-items');}
   } else if(currentPage==='items'){
     editingItemId=null;
-    document.getElementById('item-title').textContent='Add Item';
     [...document.querySelectorAll('#m-item .inp')].forEach(i=>i.value='');
     renderCatSel();
-    openModal('m-item');
+    openM('m-item');
   }
 }
 
-function renderCatSel(sel){const s=document.getElementById('f-cat');s.innerHTML='';CATS.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.icon+' '+c.name;if(sel===c.id)o.selected=true;s.appendChild(o);});}
+function renderCatSel(sel){
+  const s=document.getElementById('f-cat');s.innerHTML='';
+  CATS.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.icon+' '+c.name;if(sel===c.id)o.selected=true;s.appendChild(o);});
+}
 
 async function saveItem(){
   const n=document.getElementById('f-name').value.trim();if(!n){toast('Name!');return;}
   const d={name:n,catId:document.getElementById('f-cat').value,qty:parseFloat(document.getElementById('f-qty').value)||1,unit:document.getElementById('f-unit').value,price:parseFloat(document.getElementById('f-price').value)||0};
   if(editingItemId)await firebase.firestore.updateDoc(firebase.firestore.doc(db,'families/'+session.familyCode+'/items',editingItemId),d);
   else await firebase.firestore.addDoc(firebase.firestore.collection(db,'families/'+session.familyCode+'/items'),d);
-  closeModal('m-item');toast('✓');
+  closeM('m-item');toast('✓');
 }
 
-document.getElementById('item-search')?.addEventListener('input',()=>{
+function renderItems(){
   const s=document.getElementById('item-search').value.toLowerCase();
   const el=document.getElementById('items-list');
   const f=items.filter(i=>!s||i.name.toLowerCase().includes(s));
   const bc={};f.forEach(i=>{if(!bc[i.catId])bc[i.catId]=[];bc[i.catId].push(i);});
   el.innerHTML='';
-  Object.keys(bc).forEach(cid=>{const c=getCat(cid);const card=document.createElement('div');card.className='card';card.innerHTML='<div style="display:flex;gap:6px;margin-bottom:8px"><div style="font-size:18px">'+c.icon+'</div><div style="flex:1;font-size:13px;font-weight:600">'+c.name+'</div></div>';bc[cid].forEach(it=>{const r=document.createElement('div');r.className='ir';r.innerHTML='<div class="ii"><div class="iname">'+it.name+'</div><div class="imeta">'+it.qty+' '+it.unit+'</div></div><div style="font-size:11px">'+fp(it.price)+'</div><button class="btn" style="padding:3px 6px;font-size:11px" onclick="editItem(\''+it.id+'\')">Edit</button>';card.appendChild(r);});el.appendChild(card);});
-});
+  Object.keys(bc).forEach(cid=>{
+    const c=getCat(cid);const card=document.createElement('div');card.className='card';
+    card.innerHTML='<div style="display:flex;gap:6px;margin-bottom:8px"><div style="font-size:18px">'+c.icon+'</div><div style="flex:1;font-size:13px;font-weight:600">'+c.name+'</div></div>';
+    bc[cid].forEach(it=>{const r=document.createElement('div');r.className='ir';r.innerHTML='<div class="ii"><div class="iname">'+it.name+'</div><div class="imeta">'+it.qty+' '+it.unit+'</div></div><div style="font-size:11px">'+fp(it.price)+'</div><button class="btn" style="padding:3px 6px;font-size:11px" onclick="editItem(\''+it.id+'\')">Edit</button>';card.appendChild(r);});
+    el.appendChild(card);
+  });
+}
 
 function editItem(id){
   const it=items.find(i=>i.id===id);if(!it)return;
   editingItemId=id;
-  document.getElementById('item-title').textContent='Edit';
   document.getElementById('f-name').value=it.name;
   document.getElementById('f-qty').value=it.qty||1;
   document.getElementById('f-price').value=it.price||0;
   renderCatSel(it.catId);
   document.getElementById('f-unit').value=it.unit||'pcs';
-  openModal('m-item');
+  openM('m-item');
 }
 
 async function createTrip(){
   const n=document.getElementById('t-name').value.trim()||'Shopping',b=parseFloat(document.getElementById('t-budget').value)||0;
   const t={name:n,budget:b,done:false,total:0,createdAt:firebase.firestore.serverTimestamp(),items:[]};
   await firebase.firestore.addDoc(firebase.firestore.collection(db,'families/'+session.familyCode+'/trips'),t);
-  closeModal('m-trip');
+  closeM('m-trip');
   document.getElementById('t-name').value='';
   document.getElementById('t-budget').value='';
   toast('Trip started!');
 }
 
-function renderAddItems(){
-  const el=document.getElementById('add-items-list');el.innerHTML='';
+function buildAddItems(){
+  console.log('buildAddItems called. Items:',items.length);
+  const el=document.getElementById('add-items-content');el.innerHTML='';
   const bc={};items.forEach(i=>{if(!bc[i.catId])bc[i.catId]=[];bc[i.catId].push(i);});
+  
   Object.keys(bc).forEach(cid=>{
-    const c=getCat(cid),sec=document.createElement('div');
-    sec.innerHTML='<div style="font-size:11px;font-weight:600;color:#7a9e7e;margin:8px 0 4px">'+c.icon+' '+c.name+'</div>';
+    const c=getCat(cid);
+    const sec=document.createElement('div');
+    sec.innerHTML='<div style="font-size:11px;font-weight:600;color:#7a9e7e;margin:10px 0 6px">'+c.icon+' '+c.name+'</div>';
+    
     bc[cid].forEach(it=>{
-      const inL=activeTrip?.items?.some(i=>i.masterItemId===it.id);
-      const btn=document.createElement('button');btn.className='item-btn'+(inL?' added':'');
+      const inL=activeTrip?.items?.find(x=>x.masterItemId===it.id);
+      const btn=document.createElement('button');
+      btn.className='item-btn'+(inL?' added':'');
       btn.textContent=(inL?'✓ ':'')+it.name+' ('+it.qty+' '+it.unit+')';
       btn.onclick=async ()=>{
+        console.log('Adding item:',it.name);
         if(!inL){
           const ni={id:uid(),masterItemId:it.id,name:it.name,catId:it.catId,qty:it.qty,unit:it.unit,price:it.price||0,checked:false,paidAmount:0};
           activeTrip.items.push(ni);
-          const tt=activeTrip.items.reduce((s,i)=>s+(i.paidAmount||0),0);
-          await firebase.firestore.updateDoc(firebase.firestore.doc(db,'families/'+session.familyCode+'/trips',activeTrip.id),{items:activeTrip.items,total:tt});
-          btn.classList.add('added');btn.textContent='✓ '+it.name;
+          const total=activeTrip.items.reduce((s,i)=>s+(i.paidAmount||0),0);
+          await firebase.firestore.updateDoc(firebase.firestore.doc(db,'families/'+session.familyCode+'/trips',activeTrip.id),{items:activeTrip.items,total});
+          btn.classList.add('added');
+          btn.textContent='✓ '+it.name;
           toast('Added!');
         }
       };
@@ -382,42 +423,55 @@ function renderAddItems(){
     });
     el.appendChild(sec);
   });
-  openModal('m-add-items');
 }
 
 function renderList(){
   const bar=document.getElementById('trip-info');
-  if(!activeTrip){bar.innerHTML='<div style="color:#7a9e7e;font-size:12px">No active trip</div>';document.getElementById('shopping-list').innerHTML='<div class="emp"><i class="ti ti-shopping-cart-off"></i><div>No trip</div></div>';return;}
+  if(!activeTrip){
+    bar.innerHTML='<div style="color:#7a9e7e;font-size:12px">No active trip</div>';
+    document.getElementById('shopping-list').innerHTML='<div class="emp"><i class="ti ti-shopping-cart-off"></i><div>No trip</div></div>';
+    return;
+  }
   const lis=activeTrip.items||[];const d=lis.filter(i=>i.checked).length;const t=lis.reduce((s,i)=>s+(i.paidAmount||0),0);
   bar.innerHTML='<div style="display:flex;justify-content:space-between;margin-bottom:4px"><div><div style="font-size:13px;font-weight:700">'+activeTrip.name+'</div><div style="font-size:11px;color:#7a9e7e">'+d+'/'+lis.length+' · '+fp(t)+'</div></div><button class="btn btn-r" style="padding:5px 8px;font-size:11px" onclick="endTrip()"><i class="ti ti-flag"></i></button></div>';
   document.getElementById('trip-actions').style.display='flex';
   document.getElementById('trip-actions').innerHTML='<button class="btn btn-sm" onclick="selectAll()"><i class="ti ti-check"></i> All</button><button class="btn btn-sm" onclick="unselectAll()"><i class="ti ti-x"></i> Clear</button>';
+  
   const el=document.getElementById('shopping-list');const bci={};(lis||[]).forEach(i=>{if(!bci[i.catId])bci[i.catId]=[];bci[i.catId].push(i);});el.innerHTML='';
-  Object.keys(bci).forEach(cid=>{const c=getCat(cid);const ci=bci[cid];const cd=ci.filter(i=>i.checked).length;const card=document.createElement('div');card.className='card';card.innerHTML='<div style="display:flex;gap:6px;margin-bottom:8px"><div style="font-size:18px">'+c.icon+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600">'+c.name+'</div><div style="font-size:10px;color:#7a9e7e">'+cd+'/'+ci.length+'</div></div></div>';ci.forEach(it=>{const r=document.createElement('div');r.className='ir'+(it.checked?' done':'');r.innerHTML='<div class="ick '+(it.checked?'on':'')+'" onclick="toggleMark(\''+it.id+'\')"><i class="ti ti-check"></i></div><div class="ii"><div class="iname">'+it.name+'</div><div class="imeta">'+it.qty+' '+it.unit+' '+(it.checked&&it.paidAmount?'· '+fp(it.paidAmount):'')+' </div></div><button class="btn btn-sm" style="padding:3px 6px;font-size:11px" onclick="quickMark(\''+it.id+'\')">💰</button>';card.appendChild(r);});el.appendChild(card);});
+  Object.keys(bci).forEach(cid=>{
+    const c=getCat(cid);const ci=bci[cid];const cd=ci.filter(i=>i.checked).length;const card=document.createElement('div');card.className='card';
+    card.innerHTML='<div style="display:flex;gap:6px;margin-bottom:8px"><div style="font-size:18px">'+c.icon+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600">'+c.name+'</div><div style="font-size:10px;color:#7a9e7e">'+cd+'/'+ci.length+'</div></div></div>';
+    ci.forEach(it=>{
+      const r=document.createElement('div');r.className='ir'+(it.checked?' done':'');
+      r.innerHTML='<div class="ick '+(it.checked?'on':'')+'" onclick="toggleMark(\''+it.id+'\')"><i class="ti ti-check"></i></div><div class="ii"><div class="iname">'+it.name+'</div><div class="imeta">'+it.qty+' '+it.unit+' '+(it.checked&&it.paidAmount?'· '+fp(it.paidAmount):'')+' </div></div><button class="btn btn-sm" style="padding:3px 6px;font-size:11px" onclick="quickMark(\''+it.id+'\')">💰</button>';
+      card.appendChild(r);
+    });
+    el.appendChild(card);
+  });
 }
 
 async function toggleMark(id){
   const it=activeTrip.items.find(i=>i.id===id);if(!it)return;
-  if(it.checked){it.checked=false;it.paidAmount=0;await updateT();return;}
-  markingItemId=id;document.getElementById('mark-title').textContent=it.name;document.getElementById('mark-amt').value=it.price||'';openModal('m-mark');
+  if(it.checked){it.checked=false;it.paidAmount=0;await updateTrip();return;}
+  markingItemId=id;document.getElementById('mark-title').textContent=it.name;document.getElementById('mark-amt').value=it.price||'';openM('m-mark');
 }
 
 async function quickMark(id){
   const it=activeTrip.items.find(i=>i.id===id);if(!it)return;
   it.checked=true;it.paidAmount=it.price||0;
-  await updateT();toast('Marked!');
+  await updateTrip();toast('Marked!');
 }
 
 async function saveMark(){
   const it=activeTrip.items.find(i=>i.id===markingItemId);if(!it)return;
   it.checked=true;it.paidAmount=parseFloat(document.getElementById('mark-amt').value)||0;
-  await updateT();closeModal('m-mark');toast('Marked!');
+  await updateTrip();closeM('m-mark');toast('Marked!');
 }
 
-async function selectAll(){activeTrip.items.forEach(i=>{i.checked=true;i.paidAmount=i.price||0;});await updateT();}
-async function unselectAll(){activeTrip.items.forEach(i=>{i.checked=false;i.paidAmount=0;});await updateT();}
+async function selectAll(){activeTrip.items.forEach(i=>{i.checked=true;i.paidAmount=i.price||0;});await updateTrip();}
+async function unselectAll(){activeTrip.items.forEach(i=>{i.checked=false;i.paidAmount=0;});await updateTrip();}
 async function endTrip(){if(!confirm('End trip?'))return;await firebase.firestore.updateDoc(firebase.firestore.doc(db,'families/'+session.familyCode+'/trips',activeTrip.id),{done:true,total:activeTrip.items.reduce((s,i)=>s+(i.paidAmount||0),0)});toast('Ended!');}
-async function updateT(){const t=activeTrip.items.reduce((s,i)=>s+(i.paidAmount||0),0);await firebase.firestore.updateDoc(firebase.firestore.doc(db,'families/'+session.familyCode+'/trips',activeTrip.id),{items:activeTrip.items,total:t});renderList();}
+async function updateTrip(){const t=activeTrip.items.reduce((s,i)=>s+(i.paidAmount||0),0);await firebase.firestore.updateDoc(firebase.firestore.doc(db,'families/'+session.familyCode+'/trips',activeTrip.id),{items:activeTrip.items,total:t});renderList();}
 
 function renderTrips(){
   const el=document.getElementById('trips-list');const d=trips.filter(t=>t.done);
@@ -427,34 +481,27 @@ function renderTrips(){
 
 function goPage(p){
   currentPage=p;
-  [...document.querySelectorAll('.page')].forEach(x=>x.classList.remove('show'));
+  console.log('Going to page:',p);
+  [...document.querySelectorAll('.page')].forEach(x=>x.classList.remove('active'));
   [...document.querySelectorAll('.nav-btn')].forEach(x=>x.classList.remove('active'));
-  document.getElementById('page-'+p).classList.add('show');
-  document.querySelector('[data-page="'+p+'"]').classList.add('active');
+  document.getElementById('page-'+p).classList.add('active');
+  document.querySelector('[onclick="goPage(\''+p+'\')"]').classList.add('active');
   if(p==='items')renderItems();
   if(p==='trips')renderTrips();
   if(p==='settings'){const f=document.getElementById('fam-info');f.innerHTML='<div style="font-size:13px;font-weight:600;margin-bottom:8px">Code: <b style="color:#2d6a4f">'+session.familyCode+'</b></div><div style="font-size:12px;color:#7a9e7e">You: '+session.memberName+'</div>';}
 }
 
-function renderItems(){
-  const s=document.getElementById('item-search').value.toLowerCase();
-  const el=document.getElementById('items-list');
-  const f=items.filter(i=>!s||i.name.toLowerCase().includes(s));
-  const bc={};f.forEach(i=>{if(!bc[i.catId])bc[i.catId]=[];bc[i.catId].push(i);});
-  el.innerHTML='';
-  Object.keys(bc).forEach(cid=>{const c=getCat(cid);const card=document.createElement('div');card.className='card';card.innerHTML='<div style="display:flex;gap:6px;margin-bottom:8px"><div style="font-size:18px">'+c.icon+'</div><div style="flex:1;font-size:13px;font-weight:600">'+c.name+'</div></div>';bc[cid].forEach(it=>{const r=document.createElement('div');r.className='ir';r.innerHTML='<div class="ii"><div class="iname">'+it.name+'</div><div class="imeta">'+it.qty+' '+it.unit+'</div></div><div style="font-size:11px">'+fp(it.price)+'</div><button class="btn" style="padding:3px 6px;font-size:11px" onclick="editItem(\''+it.id+'\')">Edit</button>';card.appendChild(r);});el.appendChild(card);});
-}
-
-function render(){
+function refreshUI(){
   document.getElementById('fam-name-hdr').textContent=session?.familyCode||'Family';
-  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  [...document.querySelectorAll('.lang-btn')].forEach(b=>b.classList.remove('active'));
   document.getElementById('lb-'+lang).classList.add('active');
-  renderList();renderItems();renderTrips();goPage('list');
+  renderList();
+  renderItems();
+  renderTrips();
+  goPage('list');
 }
 
 function logout(){if(!confirm('Leave family?'))return;session=null;localStorage.removeItem('sg_sess');location.reload();}
-
-document.querySelectorAll('.nav-btn').forEach(btn=>btn.addEventListener('click',e=>goPage(e.currentTarget.dataset.page)));
 
 window.addEventListener('DOMContentLoaded',init);
 </script>
