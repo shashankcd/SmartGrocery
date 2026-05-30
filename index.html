@@ -9,75 +9,72 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:#f4f7f4;color:#1a2e1a;font-size:14px}
-:root{--green:#2d6a4f;--lt:#40916c;--pale:#d8f3dc;--bg:#f0faf2;--red:#e63946;--t3:#7a9e7e;--bdr:#c8e6c9}
-.app{width:100%;height:100vh;display:flex;flex-direction:column;background:#fff;max-width:500px;margin:0 auto}
-header{background:var(--green);color:#fff;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+body{font-family:Arial,sans-serif;background:#f4f7f4}
+.app{width:100%;height:100vh;display:flex;flex-direction:column;background:#fff;max-width:500px;margin:0 auto;position:relative}
+header{background:#2d6a4f;color:#fff;padding:12px 14px;display:flex;align-items:center;justify-content:space-between}
 .hdr-left{display:flex;align-items:center;gap:8px}
-.logo{width:32px;height:32px;background:rgba(255,255,255,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px}
-.hdr-title{font-size:15px;font-weight:700}
-.hdr-sub{font-size:10px;opacity:0.8}
-.lang-btn{padding:2px 5px;border-radius:4px;border:none;background:rgba(255,255,255,0.15);color:#fff;font-size:10px;font-weight:600;cursor:pointer;margin-right:3px}
-.lang-btn.active{background:rgba(255,255,255,0.9);color:var(--green)}
-nav{display:flex;background:#fff;border-bottom:1px solid var(--bdr);flex-shrink:0;overflow-x:auto}
-.nav-btn{flex:1;min-width:50px;padding:10px 2px 8px;border:none;background:none;font-size:9px;color:var(--t3);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;transition:color 0.15s}
+.logo{font-size:20px}
+.hdr-text{font-size:14px;font-weight:700}
+.hdr-sub{font-size:10px;opacity:0.8;margin-top:2px}
+.lang-btn{padding:3px 6px;border-radius:4px;border:none;background:rgba(255,255,255,0.15);color:#fff;font-size:10px;font-weight:600;cursor:pointer;margin-right:3px}
+.lang-btn.active{background:rgba(255,255,255,0.9);color:#2d6a4f}
+nav{display:flex;background:#fff;border-bottom:1px solid #c8e6c9;overflow-x:auto}
+.nav-btn{flex:1;min-width:50px;padding:10px 2px 8px;border:none;background:none;font-size:9px;color:#7a9e7e;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
 .nav-btn i{font-size:16px}
-.nav-btn.active{color:var(--green);border-bottom:2.5px solid var(--green)}
-.pages{flex:1;overflow-y:auto;display:flex}
-.page{display:none;flex:1;flex-direction:column;overflow-y:auto;padding:12px}
-.page.active{display:flex}
-.card{background:#fff;border:1px solid var(--bdr);border-radius:12px;padding:12px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,0.08)}
-.inp{width:100%;padding:8px 10px;border:1.5px solid var(--bdr);border-radius:6px;font-size:13px;color:#1a2e1a;outline:none}
-.inp:focus{border-color:var(--green)}
-.btn{display:inline-flex;align-items:center;gap:4px;padding:7px 12px;border-radius:6px;border:1.5px solid var(--bdr);background:#fff;color:var(--green);font-size:12px;font-weight:500;cursor:pointer;transition:all 0.15s}
-.btn:active{background:var(--pale)}
-.btn-p{background:var(--green);color:#fff;border-color:var(--green)}
-.btn-r{color:var(--red);border-color:#ffc1c5}
-.fab{position:fixed;bottom:70px;right:14px;width:48px;height:48px;border-radius:50%;background:var(--green);color:#fff;border:none;font-size:24px;cursor:pointer;box-shadow:0 4px 12px rgba(45,106,79,0.3);display:flex;align-items:center;justify-content:center;z-index:200;transition:transform 0.15s}
+.nav-btn.active{color:#2d6a4f;border-bottom:2.5px solid #2d6a4f}
+.content{flex:1;overflow-y:auto;padding:12px}
+.card{background:#fff;border:1px solid #c8e6c9;border-radius:12px;padding:12px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,0.08)}
+.inp{width:100%;padding:8px 10px;border:1.5px solid #c8e6c9;border-radius:6px;font-size:13px;outline:none}
+.inp:focus{border-color:#2d6a4f}
+.btn{display:inline-flex;align-items:center;gap:4px;padding:7px 12px;border-radius:6px;border:1.5px solid #c8e6c9;background:#fff;color:#2d6a4f;font-size:12px;font-weight:500;cursor:pointer}
+.btn:active{background:#d8f3dc}
+.btn-p{background:#2d6a4f;color:#fff;border-color:#2d6a4f}
+.btn-r{color:#e63946;border-color:#ffc1c5}
+.fab{position:fixed;bottom:70px;right:14px;width:48px;height:48px;border-radius:50%;background:#2d6a4f;color:#fff;border:none;font-size:24px;cursor:pointer;box-shadow:0 4px 12px rgba(45,106,79,0.3);display:flex;align-items:center;justify-content:center;z-index:200;transition:transform 0.15s}
 .fab:active{transform:scale(0.92)}
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:500;align-items:flex-end;justify-content:center}
-.modal-bg.open{display:flex}
-.modal-content{background:#fff;border-radius:20px 20px 0 0;padding:18px 14px 28px;width:100%;max-width:500px;max-height:88vh;overflow-y:auto;position:relative}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:500;align-items:flex-end;justify-content:center}
+.modal.open{display:flex}
+.modal-sheet{background:#fff;border-radius:20px 20px 0 0;padding:18px 14px 28px;width:100%;max-width:500px;max-height:88vh;overflow-y:auto;position:relative}
 .modal-title{font-size:16px;font-weight:700;margin-bottom:12px}
-.modal-close{position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:50%;background:var(--bg);border:none;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;color:var(--t3)}
+.modal-close{position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:50%;background:#f0faf2;border:none;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center}
 .fr{margin-bottom:10px}
-.fr label{display:block;font-size:11px;font-weight:600;color:var(--t3);margin-bottom:4px}
-.item-list{display:flex;flex-direction:column;gap:6px;max-height:60vh;overflow-y:auto}
-.item-btn{background:var(--bg);border:1px solid var(--bdr);padding:10px;border-radius:8px;text-align:left;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:space-between}
-.item-btn:active{background:var(--pale)}
-.item-btn.added{background:var(--pale);color:var(--green);font-weight:600}
+.fr label{display:block;font-size:11px;font-weight:600;color:#7a9e7e;margin-bottom:4px}
+.item-grid{display:flex;flex-direction:column;gap:6px}
+.item-btn{background:#f0faf2;border:1px solid #c8e6c9;padding:10px;border-radius:8px;text-align:left;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:space-between;font-size:13px}
+.item-btn:active{background:#d8f3dc}
+.item-btn.added{background:#d8f3dc;color:#2d6a4f;font-weight:600}
 .ir{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f5f5f5}
 .ir:last-child{border-bottom:none}
-.ick{width:22px;height:22px;border-radius:50%;border:2px solid #52b788;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all 0.2s;font-size:11px}
-.ick.on{background:var(--green);border-color:var(--green);color:#fff}
+.ick{width:22px;height:22px;border-radius:50%;border:2px solid #52b788;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:11px;transition:all 0.2s}
+.ick.on{background:#2d6a4f;border-color:#2d6a4f;color:#fff}
 .ii{flex:1;min-width:0}
 .iname{font-size:13px;font-weight:500}
-.imeta{font-size:11px;color:var(--t3);margin-top:1px}
-.ir.done .iname{text-decoration:line-through;color:var(--t3)}
-.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:#1a2e1a;color:#fff;padding:9px 18px;border-radius:18px;font-size:12px;opacity:0;z-index:1000;transition:all 0.3s;pointer-events:none;white-space:nowrap}
+.imeta{font-size:11px;color:#7a9e7e;margin-top:1px}
+.ir.done .iname{text-decoration:line-through;color:#7a9e7e}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:#1a2e1a;color:#fff;padding:9px 18px;border-radius:18px;font-size:12px;opacity:0;z-index:1000;transition:all 0.3s;pointer-events:none}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .onboard{position:fixed;inset:0;background:linear-gradient(135deg,#2d6a4f,#40916c);z-index:900;display:flex;align-items:center;justify-content:center;padding:16px}
 .onboard-card{background:#fff;border-radius:20px;padding:24px;width:100%;max-width:340px;text-align:center}
-.lang-opt{display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px;border:2px solid var(--bdr);border-radius:10px;cursor:pointer;flex:1;transition:all 0.15s}
-.lang-opt.sel{border-color:var(--green);background:var(--bg)}
+.lang-opt{display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px;border:2px solid #c8e6c9;border-radius:10px;cursor:pointer;flex:1;transition:all 0.15s}
+.lang-opt.sel{border-color:#2d6a4f;background:#f0faf2}
 .pin-wrap{display:flex;gap:8px;justify-content:center;margin:12px 0}
-.pin-box{width:48px;height:52px;border:2px solid var(--bdr);border-radius:8px;font-size:22px;text-align:center;outline:none;transition:border 0.15s}
-.pin-box:focus{border-color:var(--green)}
-.fb{display:flex;align-items:center;justify-content:space-between}
-.emp{text-align:center;padding:32px 14px;color:var(--t3)}
-.emp i{font-size:40px;color:var(--bdr);display:block;margin-bottom:8px}
+.pin-box{width:48px;height:52px;border:2px solid #c8e6c9;border-radius:8px;font-size:22px;text-align:center;outline:none}
+.pin-box:focus{border-color:#2d6a4f}
+.emp{text-align:center;padding:32px 14px;color:#7a9e7e}
+.emp i{font-size:40px;color:#c8e6c9;display:block;margin-bottom:8px}
+.page{display:none}
+.page.show{display:block}
 </style>
 </head>
 <body>
 
-<!-- MAIN APP -->
 <div class="app" id="app" style="display:none">
 <header>
   <div class="hdr-left">
     <div class="logo">🛒</div>
-    <div><div class="hdr-title">Smart Grocery</div><div class="hdr-sub">Family List</div></div>
+    <div><div class="hdr-text">Smart Grocery</div><div class="hdr-sub" id="fam-name-hdr">Family</div></div>
   </div>
-  <div style="display:flex;align-items:center;gap:6px">
+  <div>
     <button class="lang-btn" onclick="setLang('hi')" id="lb-hi">हि</button>
     <button class="lang-btn" onclick="setLang('mr')" id="lb-mr">म</button>
     <button class="lang-btn" onclick="setLang('en')" id="lb-en">EN</button>
@@ -85,45 +82,41 @@ nav{display:flex;background:#fff;border-bottom:1px solid var(--bdr);flex-shrink:
 </header>
 
 <nav>
-  <button class="nav-btn active" onclick="goPage('list',this)"><i class="ti ti-list-check"></i>List</button>
-  <button class="nav-btn" onclick="goPage('items',this)"><i class="ti ti-category"></i>Items</button>
-  <button class="nav-btn" onclick="goPage('trips',this)"><i class="ti ti-shopping-bag"></i>Trips</button>
-  <button class="nav-btn" onclick="goPage('settings',this)"><i class="ti ti-settings"></i>Settings</button>
+  <button class="nav-btn active" data-page="list"><i class="ti ti-list-check"></i>List</button>
+  <button class="nav-btn" data-page="items"><i class="ti ti-category"></i>Items</button>
+  <button class="nav-btn" data-page="trips"><i class="ti ti-shopping-bag"></i>Trips</button>
+  <button class="nav-btn" data-page="settings"><i class="ti ti-settings"></i>Settings</button>
 </nav>
 
-<div class="pages">
-<!-- LIST PAGE -->
-<div id="page-list" class="page active">
-  <div id="trip-info" class="card" style="padding:10px 12px"></div>
-  <div id="trip-actions" style="display:none;flex-wrap:wrap;gap:5px;margin-bottom:8px"></div>
-  <div id="shopping-list" style="flex:1;overflow-y:auto"></div>
-</div>
-
-<!-- ITEMS PAGE -->
-<div id="page-items" class="page">
-  <div style="display:flex;gap:6px;margin-bottom:8px">
-    <input class="inp" id="item-search" placeholder="🔍 Search..." oninput="renderItems()" style="flex:1">
+<div class="content">
+  <div class="page show" id="page-list">
+    <div id="trip-info" class="card"></div>
+    <div id="trip-actions" style="display:none;flex-wrap:wrap;gap:5px;margin-bottom:8px"></div>
+    <div id="shopping-list"></div>
   </div>
-  <div id="items-list" style="flex:1;overflow-y:auto"></div>
-</div>
-
-<!-- TRIPS PAGE -->
-<div id="page-trips" class="page">
-  <div style="font-size:11px;font-weight:600;color:var(--t3);text-transform:uppercase;margin-bottom:6px">Trip History</div>
-  <div id="trips-list" style="flex:1;overflow-y:auto"></div>
-</div>
-
-<!-- SETTINGS PAGE -->
-<div id="page-settings" class="page">
-  <div style="font-size:11px;font-weight:600;color:var(--t3);text-transform:uppercase;margin-bottom:6px">Family</div>
-  <div class="card">
-    <div id="fam-info"></div>
-    <button class="btn btn-r" style="width:100%;margin-top:10px" onclick="logout()"><i class="ti ti-logout"></i> Leave Family</button>
+  
+  <div class="page" id="page-items">
+    <div style="display:flex;gap:6px;margin-bottom:8px">
+      <input class="inp" id="item-search" placeholder="🔍 Search..." style="flex:1">
+    </div>
+    <div id="items-list"></div>
+  </div>
+  
+  <div class="page" id="page-trips">
+    <div style="font-size:11px;font-weight:600;color:#7a9e7e;text-transform:uppercase;margin-bottom:6px">Trip History</div>
+    <div id="trips-list"></div>
+  </div>
+  
+  <div class="page" id="page-settings">
+    <div style="font-size:11px;font-weight:600;color:#7a9e7e;text-transform:uppercase;margin-bottom:6px">Family</div>
+    <div class="card">
+      <div id="fam-info"></div>
+      <button class="btn btn-r" style="width:100%;margin-top:10px" onclick="logout()"><i class="ti ti-logout"></i> Leave Family</button>
+    </div>
   </div>
 </div>
-</div>
 
-<button class="fab" id="fab" onclick="fabClick()"><i class="ti ti-plus"></i></button>
+<button class="fab" id="fab" onclick="handleFab()"><i class="ti ti-plus"></i></button>
 </div>
 
 <!-- ONBOARD -->
@@ -131,7 +124,7 @@ nav{display:flex;background:#fff;border-bottom:1px solid var(--bdr);flex-shrink:
 <div class="onboard-card">
   <div style="font-size:32px;margin-bottom:8px">🛒</div>
   <div style="font-size:18px;font-weight:700;margin-bottom:3px">Smart Grocery</div>
-  <div style="font-size:12px;color:#666;margin-bottom:16px">Family Shopping List</div>
+  <div style="font-size:12px;color:#666;margin-bottom:16px">Family Shopping</div>
   <div style="display:flex;gap:6px;margin-bottom:16px" id="lang-sel"></div>
   <div style="display:flex;gap:6px">
     <button class="btn btn-p" style="flex:1;justify-content:center" onclick="showSetup('create')"><i class="ti ti-plus"></i> Create</button>
@@ -141,9 +134,9 @@ nav{display:flex;background:#fff;border-bottom:1px solid var(--bdr);flex-shrink:
 </div>
 
 <!-- MODALS -->
-<div class="modal-bg" id="m-item">
-<div class="modal-content">
-  <button class="modal-close" onclick="closeM('m-item')"><i class="ti ti-x"></i></button>
+<div class="modal" id="m-item">
+<div class="modal-sheet">
+  <button class="modal-close" onclick="closeModal('m-item')"><i class="ti ti-x"></i></button>
   <div class="modal-title" id="item-title">Add Item</div>
   <div class="fr"><label>Name *</label><input class="inp" id="f-name"></div>
   <div class="fr"><label>Category *</label><select class="inp" id="f-cat"></select></div>
@@ -153,15 +146,15 @@ nav{display:flex;background:#fff;border-bottom:1px solid var(--bdr);flex-shrink:
   </div>
   <div class="fr"><label>Price (₹)</label><input class="inp" id="f-price" type="number" placeholder="0"></div>
   <div style="display:flex;gap:6px;margin-top:10px">
-    <button class="btn" style="flex:1" onclick="closeM('m-item')">Cancel</button>
+    <button class="btn" style="flex:1" onclick="closeModal('m-item')">Cancel</button>
     <button class="btn btn-p" style="flex:1" onclick="saveItem()">Save</button>
   </div>
 </div>
 </div>
 
-<div class="modal-bg" id="m-trip">
-<div class="modal-content">
-  <button class="modal-close" onclick="closeM('m-trip')"><i class="ti ti-x"></i></button>
+<div class="modal" id="m-trip">
+<div class="modal-sheet">
+  <button class="modal-close" onclick="closeModal('m-trip')"><i class="ti ti-x"></i></button>
   <div class="modal-title">New Trip</div>
   <div class="fr"><label>Name</label><input class="inp" id="t-name" placeholder="Weekly Shopping"></div>
   <div class="fr"><label>Budget (₹)</label><input class="inp" id="t-budget" type="number" placeholder="0"></div>
@@ -169,30 +162,30 @@ nav{display:flex;background:#fff;border-bottom:1px solid var(--bdr);flex-shrink:
 </div>
 </div>
 
-<div class="modal-bg" id="m-add-items">
-<div class="modal-content" style="max-height:85vh">
-  <button class="modal-close" onclick="closeM('m-add-items')"><i class="ti ti-x"></i></button>
+<div class="modal" id="m-add-items">
+<div class="modal-sheet" style="max-height:85vh">
+  <button class="modal-close" onclick="closeModal('m-add-items')"><i class="ti ti-x"></i></button>
   <div class="modal-title">Add Items to Trip</div>
-  <div style="font-size:11px;color:var(--t3);margin-bottom:8px">Tap any item to add</div>
-  <div class="item-list" id="add-items-list"></div>
+  <div style="font-size:11px;color:#7a9e7e;margin-bottom:8px">Tap any item to add</div>
+  <div class="item-grid" id="add-items-list"></div>
 </div>
 </div>
 
-<div class="modal-bg" id="m-mark">
-<div class="modal-content">
-  <button class="modal-close" onclick="closeM('m-mark')"><i class="ti ti-x"></i></button>
+<div class="modal" id="m-mark">
+<div class="modal-sheet">
+  <button class="modal-close" onclick="closeModal('m-mark')"><i class="ti ti-x"></i></button>
   <div class="modal-title" id="mark-title">Mark Item</div>
   <div class="fr"><label>Amount Paid (₹)</label><input class="inp" id="mark-amt" type="number" placeholder="0" autofocus></div>
   <div style="display:flex;gap:6px;margin-top:10px">
-    <button class="btn" style="flex:1" onclick="closeM('m-mark')">Cancel</button>
+    <button class="btn" style="flex:1" onclick="closeModal('m-mark')">Cancel</button>
     <button class="btn btn-p" style="flex:1" onclick="saveMark()">✓ Mark</button>
   </div>
 </div>
 </div>
 
-<div class="modal-bg" id="m-setup">
-<div class="modal-content">
-  <button class="modal-close" onclick="closeM('m-setup')"><i class="ti ti-x"></i></button>
+<div class="modal" id="m-setup">
+<div class="modal-sheet">
+  <button class="modal-close" onclick="closeModal('m-setup')"><i class="ti ti-x"></i></button>
   <div id="setup-content"></div>
 </div>
 </div>
@@ -200,9 +193,6 @@ nav{display:flex;background:#fff;border-bottom:1px solid var(--bdr);flex-shrink:
 <div class="toast" id="toast"></div>
 
 <script>
-// ═══════════════════════════════════════════════════════════════
-// 🔥 PASTE YOUR FIREBASE CONFIG HERE
-// ═══════════════════════════════════════════════════════════════
 const firebaseConfig = {
   apiKey: "AIzaSyDtlATxvywvU5jsyvYE6VcmwLBzOCVhpRY",
   authDomain: "smart-grocery-402c3.firebaseapp.com",
@@ -211,59 +201,54 @@ const firebaseConfig = {
   messagingSenderId: "739331723704",
   appId: "1:739331723704:web:df442d9f5399f7ab667f4d"
 };
-// ═══════════════════════════════════════════════════════════════
 
-const CATS = [{id:'grain',name:'Anaj',icon:'🌾'},{id:'dairy',name:'Dairy',icon:'🥛'},{id:'veg',name:'Sabzi',icon:'🥦'},{id:'masala',name:'Masale',icon:'🌶️'},{id:'snack',name:'Snacks',icon:'🍪'},{id:'sauce',name:'Sauces',icon:'🍯'},{id:'noodle',name:'Noodles',icon:'🍜'},{id:'hygiene',name:'Soap',icon:'🧴'},{id:'house',name:'Home',icon:'🧹'},{id:'other',name:'Other',icon:'📦'}];
-
-const LANG={
-  hi:{add_trip:'नई ट्रिप',mark:'✓ मार्क',marked:'मार्क हो गया',unmark:'अनमार्क',no_trip:'कोई ट्रिप नहीं',add_items:'आइटम जोड़ें',end:'खत्म करो'},
-  mr:{add_trip:'नवीन ट्रिप',mark:'✓ मार्क',marked:'मार्क झाले',unmark:'अनमार्क',no_trip:'कोणतीही ट्रिप नाही',add_items:'वस्तू जोडा',end:'संपवा'},
-  en:{add_trip:'New Trip',mark:'✓ Mark',marked:'Marked',unmark:'Unmark',no_trip:'No Trip',add_items:'Add Items',end:'End'}
-};
+const CATS=[{id:'grain',name:'Anaj',icon:'🌾'},{id:'dairy',name:'Dairy',icon:'🥛'},{id:'veg',name:'Sabzi',icon:'🥦'},{id:'masala',name:'Masale',icon:'🌶️'},{id:'snack',name:'Snacks',icon:'🍪'},{id:'sauce',name:'Sauces',icon:'🍯'},{id:'noodle',name:'Noodles',icon:'🍜'},{id:'hygiene',name:'Soap',icon:'🧴'},{id:'house',name:'Home',icon:'🧹'},{id:'other',name:'Other',icon:'📦'}];
 
 let lang='hi',session=null,db=null,items=[],trips=[],activeTrip=null;
-let editingItemId=null,markingItemId=null;
+let currentPage='list',editingItemId=null,markingItemId=null;
 
-const t = k => LANG[lang]?.[k] || LANG.en[k] || k;
-const getCat = id => CATS.find(c=>c.id===id) || {name:'Other',icon:'📦'};
-const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2);
-const fp = p => p ? '₹'+Number(p).toLocaleString('en-IN') : '—';
-const toast = m => {const el=document.getElementById('toast');el.textContent=m;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2200);};
-const openM = id => document.getElementById(id).classList.add('open');
-const closeM = id => document.getElementById(id).classList.remove('open');
-const hashPin = p => {let h=0;for(let i=0;i<p.length;i++){h=((h<<5)-h)+p.charCodeAt(i);h|=0;}return Math.abs(h).toString(16);};
-const getPin = wid => [...document.querySelectorAll('#'+wid+' .pin-box')].map(b=>b.value).join('');
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2200);}
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function getCat(id){return CATS.find(c=>c.id===id)||{name:'Other',icon:'📦'};}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2);}
+function fp(p){return p?'₹'+Number(p).toLocaleString('en-IN'):'—';}
+function hashPin(p){let h=0;for(let i=0;i<p.length;i++){h=((h<<5)-h)+p.charCodeAt(i);h|=0;}return Math.abs(h).toString(16);}
+function getPin(wid){return [...document.querySelectorAll('#'+wid+' .pin-box')].map(b=>b.value).join('');}
 
-function setLang(l){lang=l;localStorage.setItem('sg_lang',l);renderAll();[...document.querySelectorAll('.lang-btn')].forEach(b=>b.classList.remove('active'));document.getElementById('lb-'+l).classList.add('active');}
+function setLang(l){lang=l;localStorage.setItem('sg_lang',l);render();}
+function saveSess(){localStorage.setItem('sg_sess',JSON.stringify(session));}
+function loadSess(){try{const s=localStorage.getItem('sg_sess');if(s)session=JSON.parse(s);}catch(e){}}
 
-function saveSession(){localStorage.setItem('sg_session',JSON.stringify(session));}
-function loadSession(){try{const s=localStorage.getItem('sg_session');if(s)session=JSON.parse(s);}catch(e){}}
-
-async function init(){
+function init(){
   firebase.initializeApp(firebaseConfig);
   db=firebase.firestore();
-  loadSession();
+  loadSess();
   lang=localStorage.getItem('sg_lang')||'hi';
   
   if(session?.code){
-    document.getElementById('onboard').style.display='none';
-    document.getElementById('app').style.display='flex';
-    listenTrips();listenItems();
-    renderAll();
+    showApp();
+    listen();
+    render();
   } else {
-    setupOnboard();
+    showOnboard();
   }
 }
 
-function setupOnboard(){
-  const el=document.getElementById('lang-sel');
-  el.innerHTML=`
-    <div class="lang-opt sel" onclick="setLang('hi');setupOnboard()"><div style="font-size:20px">🇮🇳</div><div style="font-size:11px;font-weight:700">हिंदी</div></div>
-    <div class="lang-opt" onclick="setLang('mr');setupOnboard()"><div style="font-size:20px">🇮🇳</div><div style="font-size:11px;font-weight:700">मराठी</div></div>
-    <div class="lang-opt" onclick="setLang('en');setupOnboard()"><div style="font-size:20px">🇬🇧</div><div style="font-size:11px;font-weight:700">English</div></div>
-  `;
-  [...el.querySelectorAll('.lang-opt')].forEach(o=>o.classList.remove('sel'));
-  el.querySelector('[onclick*="'+lang+'"]')?.classList.add('sel');
+function showOnboard(){
+  document.getElementById('app').style.display='none';
+  document.getElementById('onboard').style.display='flex';
+  const lo=document.getElementById('lang-sel');
+  lo.innerHTML=`<div class="lang-opt sel" onclick="setLang('hi')"><div style="font-size:20px">🇮🇳</div><div style="font-size:11px;font-weight:700">हिंदी</div></div>
+  <div class="lang-opt" onclick="setLang('mr')"><div style="font-size:20px">🇮🇳</div><div style="font-size:11px;font-weight:700">मराठी</div></div>
+  <div class="lang-opt" onclick="setLang('en')"><div style="font-size:20px">🇬🇧</div><div style="font-size:11px;font-weight:700">English</div></div>`;
+  [...lo.querySelectorAll('.lang-opt')].forEach(o=>o.classList.remove('sel'));
+  lo.querySelector(`[onclick*="${lang}"]`)?.classList.add('sel');
+}
+
+function showApp(){
+  document.getElementById('onboard').style.display='none';
+  document.getElementById('app').style.display='flex';
 }
 
 function showSetup(mode){
@@ -274,168 +259,122 @@ function showSetup(mode){
     <div class="fr"><label>Family Name</label><input class="inp" id="fs-fam"></div>
     <div class="fr"><label>Family Code</label><input class="inp" id="fs-code" style="text-transform:uppercase"></div>
     <div class="fr"><label>PIN (4 digits)</label><div class="pin-wrap" id="fs-pin"><input class="pin-box" type="password" inputmode="numeric" maxlength="1"><input class="pin-box" type="password" inputmode="numeric" maxlength="1"><input class="pin-box" type="password" inputmode="numeric" maxlength="1"><input class="pin-box" type="password" inputmode="numeric" maxlength="1"></div></div>
-    <button class="btn btn-p" style="width:100%;margin-top:8px" onclick="createFamily()">Create 👨‍👩‍👧</button>`;
+    <button class="btn btn-p" style="width:100%;margin-top:8px" onclick="createFamily()">Create Family</button>`;
     setupPin('fs-pin');
   } else {
     el.innerHTML=`<h2 style="font-size:16px;font-weight:700;margin-bottom:12px">Join Family</h2>
     <div class="fr"><label>Your Name</label><input class="inp" id="fj-name"></div>
     <div class="fr"><label>Family Code</label><input class="inp" id="fj-code" style="text-transform:uppercase"></div>
     <div class="fr"><label>PIN</label><div class="pin-wrap" id="fj-pin"><input class="pin-box" type="password" inputmode="numeric" maxlength="1"><input class="pin-box" type="password" inputmode="numeric" maxlength="1"><input class="pin-box" type="password" inputmode="numeric" maxlength="1"><input class="pin-box" type="password" inputmode="numeric" maxlength="1"></div></div>
-    <button class="btn btn-p" style="width:100%;margin-top:8px" onclick="joinFamily()">Join 👥</button>`;
+    <button class="btn btn-p" style="width:100%;margin-top:8px" onclick="joinFamily()">Join Family</button>`;
     setupPin('fj-pin');
   }
-  openM('m-setup');
+  openModal('m-setup');
 }
 
-function setupPin(wid){
-  setTimeout(()=>{
-    [...document.querySelectorAll('#'+wid+' .pin-box')].forEach((b,i)=>{
-      b.addEventListener('input',()=>{if(b.value&&i<3)document.querySelectorAll('#'+wid+' .pin-box')[i+1].focus();});
-      b.addEventListener('keydown',e=>{if(e.key==='Backspace'&&!b.value&&i>0)document.querySelectorAll('#'+wid+' .pin-box')[i-1].focus();});
-    });
-  },100);
-}
+function setupPin(wid){setTimeout(()=>{[...document.querySelectorAll('#'+wid+' .pin-box')].forEach((b,i)=>{b.addEventListener('input',()=>{if(b.value&&i<3)document.querySelectorAll('#'+wid+' .pin-box')[i+1].focus();});b.addEventListener('keydown',e=>{if(e.key==='Backspace'&&!b.value&&i>0)document.querySelectorAll('#'+wid+' .pin-box')[i-1].focus();});});},100);}
 
 async function createFamily(){
-  const name=document.getElementById('fs-name').value.trim();
-  const fam=document.getElementById('fs-fam').value.trim();
-  const code=document.getElementById('fs-code').value.trim().toUpperCase();
-  const pin=getPin('fs-pin');
-  if(!name||!fam||!code||pin.length!==4){toast('Fill all!');return;}
-  const mid=uid();
-  const doc={name:fam,code,pinHash:hashPin(pin),adminId:mid,createdAt:new Date().toISOString(),members:{}};
-  doc.members[mid]={name,joinedAt:new Date().toISOString(),isAdmin:true};
-  await firebase.firestore.setDoc(firebase.firestore.doc(db,'families',code),doc);
-  session={memberId:mid,memberName:name,familyCode:code,isAdmin:true};
-  saveSession();
-  closeM('m-setup');
+  const n=document.getElementById('fs-name').value.trim(),f=document.getElementById('fs-fam').value.trim(),c=document.getElementById('fs-code').value.trim().toUpperCase(),p=getPin('fs-pin');
+  if(!n||!f||!c||p.length!==4){toast('Fill all!');return;}
+  const m=uid(),d={name:f,code:c,pinHash:hashPin(p),adminId:m,members:{}};
+  d.members[m]={name:n,isAdmin:true};
+  await firebase.firestore.setDoc(firebase.firestore.doc(db,'families',c),d);
+  session={memberId:m,memberName:n,familyCode:c,isAdmin:true};
+  saveSess();
   location.reload();
 }
 
 async function joinFamily(){
-  const name=document.getElementById('fj-name').value.trim();
-  const code=document.getElementById('fj-code').value.trim().toUpperCase();
-  const pin=getPin('fj-pin');
-  if(!name||!code||pin.length!==4){toast('Fill all!');return;}
-  const snap=await firebase.firestore.getDoc(firebase.firestore.doc(db,'families',code));
-  if(!snap.exists()){toast('Code not found!');return;}
-  const data=snap.data();
-  if(data.pinHash!==hashPin(pin)){toast('Wrong PIN!');return;}
-  const mid=uid();
-  await firebase.firestore.updateDoc(firebase.firestore.doc(db,'families',code),{['members.'+mid]:{name,joinedAt:new Date().toISOString(),isAdmin:false}});
-  session={memberId:mid,memberName:name,familyCode:code,isAdmin:false};
-  saveSession();
-  closeM('m-setup');
+  const n=document.getElementById('fj-name').value.trim(),c=document.getElementById('fj-code').value.trim().toUpperCase(),p=getPin('fj-pin');
+  if(!n||!c||p.length!==4){toast('Fill all!');return;}
+  const s=await firebase.firestore.getDoc(firebase.firestore.doc(db,'families',c));
+  if(!s.exists()){toast('Not found!');return;}
+  const d=s.data();
+  if(d.pinHash!==hashPin(p)){toast('Wrong PIN!');return;}
+  const m=uid();
+  await firebase.firestore.updateDoc(firebase.firestore.doc(db,'families',c),{['members.'+m]:{name:n,isAdmin:false}});
+  session={memberId:m,memberName:n,familyCode:c,isAdmin:false};
+  saveSess();
   location.reload();
 }
 
-function listenTrips(){
-  const q=firebase.firestore.query(firebase.firestore.collection(db,'families/'+session.familyCode+'/trips'),firebase.firestore.orderBy('createdAt','desc'));
-  firebase.firestore.onSnapshot(q,snap=>{
-    trips=snap.docs.map(d=>({id:d.id,...d.data()}));
-    activeTrip=trips.find(t=>!t.done);
-    renderList();renderTrips();
-  });
+function listen(){
+  firebase.firestore.onSnapshot(firebase.firestore.query(firebase.firestore.collection(db,'families/'+session.familyCode+'/trips'),firebase.firestore.orderBy('createdAt','desc')),snap=>{trips=snap.docs.map(d=>({id:d.id,...d.data()}));activeTrip=trips.find(t=>!t.done);});
+  firebase.firestore.onSnapshot(firebase.firestore.collection(db,'families/'+session.familyCode+'/items'),snap=>{items=snap.docs.map(d=>({id:d.id,...d.data()}));});
 }
 
-function listenItems(){
-  const col=firebase.firestore.collection(db,'families/'+session.familyCode+'/items');
-  firebase.firestore.onSnapshot(col,snap=>{items=snap.docs.map(d=>({id:d.id,...d.data()}));});
-}
-
-function fabClick(){
-  const p=document.querySelector('.page.active').id;
-  if(p==='page-list'){
-    if(!activeTrip)openM('m-trip');
-    else {renderAddItems();openM('m-add-items');}
-  } else if(p==='page-items'){
+function handleFab(){
+  if(currentPage==='list'){
+    if(!activeTrip)openModal('m-trip');
+    else renderAddItems();
+  } else if(currentPage==='items'){
     editingItemId=null;
     document.getElementById('item-title').textContent='Add Item';
-    document.getElementById('f-name').value='';
-    document.getElementById('f-qty').value='';
-    document.getElementById('f-price').value='';
-    renderCatSelect();
-    openM('m-item');
+    [...document.querySelectorAll('#m-item .inp')].forEach(i=>i.value='');
+    renderCatSel();
+    openModal('m-item');
   }
 }
 
-function renderCatSelect(sel){
-  const s=document.getElementById('f-cat');s.innerHTML='';
-  CATS.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.icon+' '+c.name;if(sel===c.id)o.selected=true;s.appendChild(o);});
-}
+function renderCatSel(sel){const s=document.getElementById('f-cat');s.innerHTML='';CATS.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.icon+' '+c.name;if(sel===c.id)o.selected=true;s.appendChild(o);});}
 
 async function saveItem(){
-  const name=document.getElementById('f-name').value.trim();
-  if(!name){toast('Name!');return;}
-  const data={name,catId:document.getElementById('f-cat').value,qty:parseFloat(document.getElementById('f-qty').value)||1,unit:document.getElementById('f-unit').value,price:parseFloat(document.getElementById('f-price').value)||0};
-  if(editingItemId){
-    await firebase.firestore.updateDoc(firebase.firestore.doc(db,'families/'+session.familyCode+'/items',editingItemId),data);
-  } else {
-    await firebase.firestore.addDoc(firebase.firestore.collection(db,'families/'+session.familyCode+'/items'),{...data,createdAt:firebase.firestore.serverTimestamp()});
-  }
-  closeM('m-item');
-  toast('✓');
+  const n=document.getElementById('f-name').value.trim();if(!n){toast('Name!');return;}
+  const d={name:n,catId:document.getElementById('f-cat').value,qty:parseFloat(document.getElementById('f-qty').value)||1,unit:document.getElementById('f-unit').value,price:parseFloat(document.getElementById('f-price').value)||0};
+  if(editingItemId)await firebase.firestore.updateDoc(firebase.firestore.doc(db,'families/'+session.familyCode+'/items',editingItemId),d);
+  else await firebase.firestore.addDoc(firebase.firestore.collection(db,'families/'+session.familyCode+'/items'),d);
+  closeModal('m-item');toast('✓');
 }
 
-function renderItems(){
-  const search=(document.getElementById('item-search')?.value||'').toLowerCase();
+document.getElementById('item-search')?.addEventListener('input',()=>{
+  const s=document.getElementById('item-search').value.toLowerCase();
   const el=document.getElementById('items-list');
-  const filtered=items.filter(i=>!search||i.name.toLowerCase().includes(search));
-  const byCat={};filtered.forEach(i=>{if(!byCat[i.catId])byCat[i.catId]=[];byCat[i.catId].push(i);});
+  const f=items.filter(i=>!s||i.name.toLowerCase().includes(s));
+  const bc={};f.forEach(i=>{if(!bc[i.catId])bc[i.catId]=[];bc[i.catId].push(i);});
   el.innerHTML='';
-  Object.keys(byCat).forEach(catId=>{
-    const cat=getCat(catId);
-    const card=document.createElement('div');card.className='card';
-    card.innerHTML='<div style="display:flex;align-items:center;gap:6px;margin-bottom:8px"><div style="font-size:18px">'+cat.icon+'</div><div style="flex:1;font-size:13px;font-weight:600">'+cat.name+'</div><span style="font-size:10px;background:var(--pale);color:var(--green);padding:2px 7px;border-radius:10px">'+byCat[catId].length+'</span></div>';
-    byCat[catId].forEach(item=>{
-      const row=document.createElement('div');row.className='ir';
-      row.innerHTML='<div class="ii"><div class="iname">'+item.name+'</div><div class="imeta">'+item.qty+' '+item.unit+'</div></div><div style="font-size:11px;color:var(--t3)">'+fp(item.price)+'</div><button class="btn" style="padding:3px 6px;font-size:11px" onclick="editItem(\''+item.id+'\')">Edit</button>';
-      card.appendChild(row);
-    });
-    el.appendChild(card);
-  });
-}
+  Object.keys(bc).forEach(cid=>{const c=getCat(cid);const card=document.createElement('div');card.className='card';card.innerHTML='<div style="display:flex;gap:6px;margin-bottom:8px"><div style="font-size:18px">'+c.icon+'</div><div style="flex:1;font-size:13px;font-weight:600">'+c.name+'</div></div>';bc[cid].forEach(it=>{const r=document.createElement('div');r.className='ir';r.innerHTML='<div class="ii"><div class="iname">'+it.name+'</div><div class="imeta">'+it.qty+' '+it.unit+'</div></div><div style="font-size:11px">'+fp(it.price)+'</div><button class="btn" style="padding:3px 6px;font-size:11px" onclick="editItem(\''+it.id+'\')">Edit</button>';card.appendChild(r);});el.appendChild(card);});
+});
 
 function editItem(id){
-  const item=items.find(i=>i.id===id);if(!item)return;
+  const it=items.find(i=>i.id===id);if(!it)return;
   editingItemId=id;
   document.getElementById('item-title').textContent='Edit';
-  document.getElementById('f-name').value=item.name;
-  document.getElementById('f-qty').value=item.qty||1;
-  document.getElementById('f-price').value=item.price||0;
-  renderCatSelect(item.catId);
-  document.getElementById('f-unit').value=item.unit||'pcs';
-  openM('m-item');
+  document.getElementById('f-name').value=it.name;
+  document.getElementById('f-qty').value=it.qty||1;
+  document.getElementById('f-price').value=it.price||0;
+  renderCatSel(it.catId);
+  document.getElementById('f-unit').value=it.unit||'pcs';
+  openModal('m-item');
 }
 
 async function createTrip(){
-  const name=document.getElementById('t-name').value.trim()||'Shopping';
-  const budget=parseFloat(document.getElementById('t-budget').value)||0;
-  const trip={name,budget,done:false,total:0,createdAt:firebase.firestore.serverTimestamp(),createdBy:session.memberName,items:[]};
-  await firebase.firestore.addDoc(firebase.firestore.collection(db,'families/'+session.familyCode+'/trips'),trip);
-  closeM('m-trip');
+  const n=document.getElementById('t-name').value.trim()||'Shopping',b=parseFloat(document.getElementById('t-budget').value)||0;
+  const t={name:n,budget:b,done:false,total:0,createdAt:firebase.firestore.serverTimestamp(),items:[]};
+  await firebase.firestore.addDoc(firebase.firestore.collection(db,'families/'+session.familyCode+'/trips'),t);
+  closeModal('m-trip');
   document.getElementById('t-name').value='';
   document.getElementById('t-budget').value='';
-  toast(t('trip_start')||'Trip started!');
+  toast('Trip started!');
 }
 
 function renderAddItems(){
   const el=document.getElementById('add-items-list');el.innerHTML='';
-  const byCat={};items.forEach(i=>{if(!byCat[i.catId])byCat[i.catId]=[];byCat[i.catId].push(i);});
-  Object.keys(byCat).forEach(catId=>{
-    const cat=getCat(catId);
-    const sec=document.createElement('div');
-    sec.innerHTML='<div style="font-size:11px;font-weight:600;color:var(--t3);margin:8px 0 4px">'+cat.icon+' '+cat.name+'</div>';
-    byCat[catId].forEach(item=>{
-      const inList=activeTrip?.items?.some(i=>i.masterItemId===item.id);
-      const btn=document.createElement('button');btn.className='item-btn'+(inList?' added':'');btn.textContent=(inList?'✓ ':'') + item.name;
+  const bc={};items.forEach(i=>{if(!bc[i.catId])bc[i.catId]=[];bc[i.catId].push(i);});
+  Object.keys(bc).forEach(cid=>{
+    const c=getCat(cid),sec=document.createElement('div');
+    sec.innerHTML='<div style="font-size:11px;font-weight:600;color:#7a9e7e;margin:8px 0 4px">'+c.icon+' '+c.name+'</div>';
+    bc[cid].forEach(it=>{
+      const inL=activeTrip?.items?.some(i=>i.masterItemId===it.id);
+      const btn=document.createElement('button');btn.className='item-btn'+(inL?' added':'');
+      btn.textContent=(inL?'✓ ':'')+it.name+' ('+it.qty+' '+it.unit+')';
       btn.onclick=async ()=>{
-        if(!inList){
-          const newItem={id:uid(),masterItemId:item.id,name:item.name,catId:item.catId,qty:item.qty,unit:item.unit,price:item.price||0,checked:false,paidAmount:0};
-          activeTrip.items.push(newItem);
-          const total=activeTrip.items.reduce((s,i)=>s+(i.paidAmount||0),0);
-          await firebase.firestore.updateDoc(firebase.firestore.doc(db,'families/'+session.familyCode+'/trips',activeTrip.id),{items:activeTrip.items,total});
-          btn.classList.add('added');btn.textContent='✓ '+item.name;
+        if(!inL){
+          const ni={id:uid(),masterItemId:it.id,name:it.name,catId:it.catId,qty:it.qty,unit:it.unit,price:it.price||0,checked:false,paidAmount:0};
+          activeTrip.items.push(ni);
+          const tt=activeTrip.items.reduce((s,i)=>s+(i.paidAmount||0),0);
+          await firebase.firestore.updateDoc(firebase.firestore.doc(db,'families/'+session.familyCode+'/trips',activeTrip.id),{items:activeTrip.items,total:tt});
+          btn.classList.add('added');btn.textContent='✓ '+it.name;
           toast('Added!');
         }
       };
@@ -443,99 +382,79 @@ function renderAddItems(){
     });
     el.appendChild(sec);
   });
+  openModal('m-add-items');
 }
 
 function renderList(){
   const bar=document.getElementById('trip-info');
-  if(!activeTrip){bar.innerHTML='<div class="fb"><div style="color:var(--t3);font-size:12px">'+t('no_trip')+'</div></div>';document.getElementById('shopping-list').innerHTML='<div class="emp"><i class="ti ti-shopping-cart-off"></i><div>'+t('no_trip')+'</div></div>';return;}
-  const items_list=activeTrip.items||[];
-  const done=items_list.filter(i=>i.checked).length;
-  const total=items_list.reduce((s,i)=>s+(i.paidAmount||0),0);
-  bar.innerHTML='<div class="fb" style="margin-bottom:4px"><div><div style="font-size:13px;font-weight:700">'+activeTrip.name+'</div><div style="font-size:11px;color:var(--t3)">'+done+'/'+items_list.length+' · '+fp(total)+'</div></div><button class="btn btn-r" style="padding:5px 8px;font-size:11px" onclick="endTrip()"><i class="ti ti-flag"></i></button></div>';
+  if(!activeTrip){bar.innerHTML='<div style="color:#7a9e7e;font-size:12px">No active trip</div>';document.getElementById('shopping-list').innerHTML='<div class="emp"><i class="ti ti-shopping-cart-off"></i><div>No trip</div></div>';return;}
+  const lis=activeTrip.items||[];const d=lis.filter(i=>i.checked).length;const t=lis.reduce((s,i)=>s+(i.paidAmount||0),0);
+  bar.innerHTML='<div style="display:flex;justify-content:space-between;margin-bottom:4px"><div><div style="font-size:13px;font-weight:700">'+activeTrip.name+'</div><div style="font-size:11px;color:#7a9e7e">'+d+'/'+lis.length+' · '+fp(t)+'</div></div><button class="btn btn-r" style="padding:5px 8px;font-size:11px" onclick="endTrip()"><i class="ti ti-flag"></i></button></div>';
   document.getElementById('trip-actions').style.display='flex';
   document.getElementById('trip-actions').innerHTML='<button class="btn btn-sm" onclick="selectAll()"><i class="ti ti-check"></i> All</button><button class="btn btn-sm" onclick="unselectAll()"><i class="ti ti-x"></i> Clear</button>';
-  const el=document.getElementById('shopping-list');
-  const byCat={};(items_list||[]).forEach(i=>{if(!byCat[i.catId])byCat[i.catId]=[];byCat[i.catId].push(i);});
-  el.innerHTML='';
-  Object.keys(byCat).forEach(catId=>{
-    const cat=getCat(catId);const citems=byCat[catId];const cdone=citems.filter(i=>i.checked).length;
-    const card=document.createElement('div');card.className='card';
-    card.innerHTML='<div style="display:flex;align-items:center;gap:6px;margin-bottom:8px"><div style="font-size:18px">'+cat.icon+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600">'+cat.name+'</div><div style="font-size:10px;color:var(--t3)">'+cdone+'/'+citems.length+'</div></div></div>';
-    citems.forEach(item=>{
-      const row=document.createElement('div');row.className='ir'+(item.checked?' done':'');
-      row.innerHTML='<div class="ick '+(item.checked?'on':'')+'" onclick="toggleMark(\''+item.id+'\')"><i class="ti ti-check"></i></div><div class="ii"><div class="iname">'+item.name+'</div><div class="imeta">'+item.qty+' '+item.unit+' '+(item.checked&&item.paidAmount?'· '+fp(item.paidAmount):'')+'</div></div><button class="btn btn-sm" style="padding:3px 6px;font-size:11px" onclick="quickMark(\''+item.id+'\')">💰</button>';
-      card.appendChild(row);
-    });
-    el.appendChild(card);
-  });
+  const el=document.getElementById('shopping-list');const bci={};(lis||[]).forEach(i=>{if(!bci[i.catId])bci[i.catId]=[];bci[i.catId].push(i);});el.innerHTML='';
+  Object.keys(bci).forEach(cid=>{const c=getCat(cid);const ci=bci[cid];const cd=ci.filter(i=>i.checked).length;const card=document.createElement('div');card.className='card';card.innerHTML='<div style="display:flex;gap:6px;margin-bottom:8px"><div style="font-size:18px">'+c.icon+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600">'+c.name+'</div><div style="font-size:10px;color:#7a9e7e">'+cd+'/'+ci.length+'</div></div></div>';ci.forEach(it=>{const r=document.createElement('div');r.className='ir'+(it.checked?' done':'');r.innerHTML='<div class="ick '+(it.checked?'on':'')+'" onclick="toggleMark(\''+it.id+'\')"><i class="ti ti-check"></i></div><div class="ii"><div class="iname">'+it.name+'</div><div class="imeta">'+it.qty+' '+it.unit+' '+(it.checked&&it.paidAmount?'· '+fp(it.paidAmount):'')+' </div></div><button class="btn btn-sm" style="padding:3px 6px;font-size:11px" onclick="quickMark(\''+it.id+'\')">💰</button>';card.appendChild(r);});el.appendChild(card);});
 }
 
-async function toggleMark(itemId){
-  const item=activeTrip.items.find(i=>i.id===itemId);if(!item)return;
-  if(item.checked){item.checked=false;item.paidAmount=0;}else{markingItemId=itemId;document.getElementById('mark-title').textContent=item.name;document.getElementById('mark-amt').value=item.price||'';openM('m-mark');return;}
-  await updateTrip();
+async function toggleMark(id){
+  const it=activeTrip.items.find(i=>i.id===id);if(!it)return;
+  if(it.checked){it.checked=false;it.paidAmount=0;await updateT();return;}
+  markingItemId=id;document.getElementById('mark-title').textContent=it.name;document.getElementById('mark-amt').value=it.price||'';openModal('m-mark');
 }
 
-async function quickMark(itemId){
-  const item=activeTrip.items.find(i=>i.id===itemId);if(!item)return;
-  item.checked=true;item.paidAmount=item.price||0;
-  await updateTrip();
-  toast(t('marked')||'Marked');
+async function quickMark(id){
+  const it=activeTrip.items.find(i=>i.id===id);if(!it)return;
+  it.checked=true;it.paidAmount=it.price||0;
+  await updateT();toast('Marked!');
 }
 
 async function saveMark(){
-  const item=activeTrip.items.find(i=>i.id===markingItemId);if(!item)return;
-  item.checked=true;item.paidAmount=parseFloat(document.getElementById('mark-amt').value)||0;
-  const q=parseFloat(document.getElementById('mark-qty').value);if(q)item.qty=q;
-  await updateTrip();
-  closeM('m-mark');
-  toast(t('marked')||'Marked');
+  const it=activeTrip.items.find(i=>i.id===markingItemId);if(!it)return;
+  it.checked=true;it.paidAmount=parseFloat(document.getElementById('mark-amt').value)||0;
+  await updateT();closeModal('m-mark');toast('Marked!');
 }
 
-async function selectAll(){activeTrip.items.forEach(i=>{i.checked=true;i.paidAmount=i.price||0;});await updateTrip();}
-async function unselectAll(){activeTrip.items.forEach(i=>{i.checked=false;i.paidAmount=0;});await updateTrip();}
-async function endTrip(){if(!confirm('End trip?'))return;await firebase.firestore.updateDoc(firebase.firestore.doc(db,'families/'+session.familyCode+'/trips',activeTrip.id),{done:true,total:activeTrip.items.reduce((s,i)=>s+(i.paidAmount||0),0)});toast(t('end')||'Ended!');}
-
-async function updateTrip(){
-  const total=activeTrip.items.reduce((s,i)=>s+(i.paidAmount||0),0);
-  await firebase.firestore.updateDoc(firebase.firestore.doc(db,'families/'+session.familyCode+'/trips',activeTrip.id),{items:activeTrip.items,total});
-  renderList();
-}
+async function selectAll(){activeTrip.items.forEach(i=>{i.checked=true;i.paidAmount=i.price||0;});await updateT();}
+async function unselectAll(){activeTrip.items.forEach(i=>{i.checked=false;i.paidAmount=0;});await updateT();}
+async function endTrip(){if(!confirm('End trip?'))return;await firebase.firestore.updateDoc(firebase.firestore.doc(db,'families/'+session.familyCode+'/trips',activeTrip.id),{done:true,total:activeTrip.items.reduce((s,i)=>s+(i.paidAmount||0),0)});toast('Ended!');}
+async function updateT(){const t=activeTrip.items.reduce((s,i)=>s+(i.paidAmount||0),0);await firebase.firestore.updateDoc(firebase.firestore.doc(db,'families/'+session.familyCode+'/trips',activeTrip.id),{items:activeTrip.items,total:t});renderList();}
 
 function renderTrips(){
-  const el=document.getElementById('trips-list');
-  const done=trips.filter(t=>t.done);
-  if(!done.length){el.innerHTML='<div class="emp"><i class="ti ti-history-off"></i><div>No trips</div></div>';return;}
-  el.innerHTML='';
-  done.forEach(t=>{
-    const card=document.createElement('div');card.className='card';
-    const d=t.createdAt?.toDate?t.createdAt.toDate():new Date();
-    const completed=t.items?.filter(i=>i.checked).length||0;
-    card.innerHTML='<div class="fb" style="margin-bottom:3px"><div style="font-size:13px;font-weight:700">'+t.name+'</div><span style="font-size:11px;background:var(--pale);color:var(--green);padding:2px 7px;border-radius:10px">'+fp(t.total)+'</span></div><div style="font-size:11px;color:var(--t3)">'+d.toLocaleDateString()+' · '+completed+'/'+(t.items?.length||0)+' items</div>';
-    el.appendChild(card);
-  });
+  const el=document.getElementById('trips-list');const d=trips.filter(t=>t.done);
+  if(!d.length){el.innerHTML='<div class="emp"><i class="ti ti-history-off"></i><div>No trips</div></div>';return;}
+  el.innerHTML='';d.forEach(t=>{const card=document.createElement('div');card.className='card';const dt=t.createdAt?.toDate?t.createdAt.toDate():new Date();const c=t.items?.filter(i=>i.checked).length||0;card.innerHTML='<div style="display:flex;justify-content:space-between;margin-bottom:3px"><div style="font-size:13px;font-weight:700">'+t.name+'</div><span style="font-size:11px;background:#d8f3dc;color:#2d6a4f;padding:2px 7px;border-radius:10px">'+fp(t.total)+'</span></div><div style="font-size:11px;color:#7a9e7e">'+dt.toLocaleDateString()+' · '+c+'/'+(t.items?.length||0)+' items</div>';el.appendChild(card);});
 }
 
-function goPage(p,btn){
-  [...document.querySelectorAll('.page')].forEach(x=>x.classList.remove('active'));
+function goPage(p){
+  currentPage=p;
+  [...document.querySelectorAll('.page')].forEach(x=>x.classList.remove('show'));
   [...document.querySelectorAll('.nav-btn')].forEach(x=>x.classList.remove('active'));
-  document.getElementById('page-'+p).classList.add('active');
-  if(btn)btn.classList.add('active');
+  document.getElementById('page-'+p).classList.add('show');
+  document.querySelector('[data-page="'+p+'"]').classList.add('active');
   if(p==='items')renderItems();
   if(p==='trips')renderTrips();
-  if(p==='settings'){
-    const f=document.getElementById('fam-info');
-    const sid=session.memberId;
-    f.innerHTML='<div style="font-size:13px;font-weight:600;margin-bottom:8px">Code: <b style="color:var(--green)">'+session.familyCode+'</b></div><div style="font-size:12px;color:var(--t3);margin-bottom:10px">You: '+session.memberName+'</div>';
-  }
+  if(p==='settings'){const f=document.getElementById('fam-info');f.innerHTML='<div style="font-size:13px;font-weight:600;margin-bottom:8px">Code: <b style="color:#2d6a4f">'+session.familyCode+'</b></div><div style="font-size:12px;color:#7a9e7e">You: '+session.memberName+'</div>';}
 }
 
-function logout(){if(!confirm('Leave family?'))return;session=null;localStorage.removeItem('sg_session');location.reload();}
-
-function renderAll(){
-  setLang(lang);
-  goPage('list',document.querySelector('.nav-btn'));
+function renderItems(){
+  const s=document.getElementById('item-search').value.toLowerCase();
+  const el=document.getElementById('items-list');
+  const f=items.filter(i=>!s||i.name.toLowerCase().includes(s));
+  const bc={};f.forEach(i=>{if(!bc[i.catId])bc[i.catId]=[];bc[i.catId].push(i);});
+  el.innerHTML='';
+  Object.keys(bc).forEach(cid=>{const c=getCat(cid);const card=document.createElement('div');card.className='card';card.innerHTML='<div style="display:flex;gap:6px;margin-bottom:8px"><div style="font-size:18px">'+c.icon+'</div><div style="flex:1;font-size:13px;font-weight:600">'+c.name+'</div></div>';bc[cid].forEach(it=>{const r=document.createElement('div');r.className='ir';r.innerHTML='<div class="ii"><div class="iname">'+it.name+'</div><div class="imeta">'+it.qty+' '+it.unit+'</div></div><div style="font-size:11px">'+fp(it.price)+'</div><button class="btn" style="padding:3px 6px;font-size:11px" onclick="editItem(\''+it.id+'\')">Edit</button>';card.appendChild(r);});el.appendChild(card);});
 }
+
+function render(){
+  document.getElementById('fam-name-hdr').textContent=session?.familyCode||'Family';
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('lb-'+lang).classList.add('active');
+  renderList();renderItems();renderTrips();goPage('list');
+}
+
+function logout(){if(!confirm('Leave family?'))return;session=null;localStorage.removeItem('sg_sess');location.reload();}
+
+document.querySelectorAll('.nav-btn').forEach(btn=>btn.addEventListener('click',e=>goPage(e.currentTarget.dataset.page)));
 
 window.addEventListener('DOMContentLoaded',init);
 </script>
