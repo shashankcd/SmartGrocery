@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smart Grocery - DEBUG</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
+<style>
+body{font-family:Arial;background:#f5f5f5;color:#333;padding:20px}
+.container{max-width:500px;margin:0 auto;background:#fff;padding:20px;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.1)}
+h1{color:#2d6a4f;margin-top:0}
+.form-group{margin-bottom:15px}
+label{display:block;font-weight:bold;margin-bottom:5px;color:#2d6a4f}
+input{width:100%;padding:10px;border:1px solid #ddd;border-radius:5px;font-size:14px;box-sizing:border-box}
+button{width:100%;padding:12px;background:#2d6a4f;color:white;border:none;border-radius:5px;font-size:14px;font-weight:bold;cursor:pointer}
+button:hover{background:#1b4a35}
+.pin-wrap{display:flex;gap:5px}
+.pin-box{width:40px;height:40px;border:2px solid #ddd;border-radius:5px;text-align:center;font-size:18px;padding:0}
+.status{margin-top:20px;padding:15px;border-radius:5px;background:#f0f0f0;font-family:monospace;font-size:12px;max-height:200px;overflow-y:auto}
+.status.success{background:#d4edda;border:1px solid #c3e6cb;color:#155724}
+.status.error{background:#f8d7da;border:1px solid #f5c6cb;color:#721c24}
+.status.info{background:#d1ecf1;border:1px solid #bee5eb;color:#0c5460}
+.config-status{margin:10px 0;padding:10px;border-radius:5px;background:#e7f3ff;border-left:4px solid #2196F3}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🛒 Smart Grocery - Firebase Test</h1>
+  
+  <div class="config-status">
+    <strong>Step 1: Check Firebase Config</strong><br>
+    <div id="config-check">Loading...</div>
+  </div>
+
+  <div style="margin-top:20px;padding:15px;background:#fff9e6;border:1px solid #ffe066;border-radius:5px">
+    <strong>⚠️ UPDATE YOUR CONFIG FIRST!</strong><br>
+    Edit this file and find the firebaseConfig object around line 100<br>
+    Replace it with YOUR Firebase config from Firebase Console
+  </div>
+
+  <h2 style="margin-top:30px;color:#2d6a4f">Test Create Family</h2>
+  
+  <div class="form-group">
+    <label>Your Name</label>
+    <input id="name" placeholder="e.g. Rahul Sharma">
+  </div>
+
+  <div class="form-group">
+    <label>Family Name</label>
+    <input id="famName" placeholder="e.g. Sharma Family">
+  </div>
+
+  <div class="form-group">
+    <label>Family Code (unique)</label>
+    <input id="code" placeholder="e.g. SHARMA123" style="text-transform:uppercase">
+  </div>
+
+  <div class="form-group">
+    <label>Set PIN (4 digits)</label>
+    <div class="pin-wrap" id="pin-wrap">
+      <input class="pin-box" type="password" inputmode="numeric" maxlength="1">
+      <input class="pin-box" type="password" inputmode="numeric" maxlength="1">
+      <input class="pin-box" type="password" inputmode="numeric" maxlength="1">
+      <input class="pin-box" type="password" inputmode="numeric" maxlength="1">
+    </div>
+  </div>
+
+  <button onclick="testCreateFamily()">TEST: Create Family</button>
+
+  <div class="status" id="status">
+    <div style="color:#666">Status messages will appear here...</div>
+  </div>
+</div>
+
+<script>
+// ========================================
+// 🔥 PASTE YOUR FIREBASE CONFIG HERE
+// ========================================
+const firebaseConfig = {
+  apiKey: "AIzaSyDtlATxvywvU5jsyvYE6VcmwLBzOCVhpRY",
+  authDomain: "smart-grocery-402c3.firebaseapp.com",
+  projectId: "smart-grocery-402c3",
+  storageBucket: "smart-grocery-402c3.firebasestorage.app",
+  messagingSenderId: "739331723704",
+  appId: "1:739331723704:web:df442d9f5399f7ab667f4d"
+};
+// ========================================
+
+// Initialize Firebase
+console.log("Initializing Firebase...");
+try {
+  const app = firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  window.db = db;
+  window.app = app;
+  log("✅ Firebase initialized successfully!", "success");
+  checkConfig();
+} catch (e) {
+  log("❌ Firebase init failed: " + e.message, "error");
+}
+
+// Setup PIN boxes
+document.querySelectorAll('.pin-box').forEach((box, i) => {
+  box.addEventListener('input', function() {
+    if (this.value && i < 3) document.querySelectorAll('.pin-box')[i+1].focus();
+  });
+  box.addEventListener('keydown', function(e) {
+    if (e.key === 'Backspace' && !this.value && i > 0) {
+      document.querySelectorAll('.pin-box')[i-1].focus();
+    }
+  });
+});
+
+function checkConfig() {
+  const configOK = firebaseConfig.projectId !== "YOUR_PROJECT_ID";
+  const el = document.getElementById('config-check');
+  if (configOK) {
+    el.innerHTML = `✅ <strong>Config found:</strong> ${firebaseConfig.projectId}`;
+    el.style.background = '#d4edda';
+  } else {
+    el.innerHTML = `❌ <strong>Config NOT updated!</strong> Still has placeholder values. Edit the file!`;
+    el.style.background = '#f8d7da';
+  }
+}
+
+function getPin() {
+  return [...document.querySelectorAll('.pin-box')].map(b => b.value).join('');
+}
+
+function hashPin(p) {
+  let h = 0;
+  for (let i = 0; i < p.length; i++) {
+    h = ((h << 5) - h) + p.charCodeAt(i);
+    h |= 0;
+  }
+  return Math.abs(h).toString(16);
+}
+
+async function testCreateFamily() {
+  const name = document.getElementById('name').value.trim();
+  const famName = document.getElementById('famName').value.trim();
+  const code = document.getElementById('code').value.trim().toUpperCase();
+  const pin = getPin();
+
+  log("", "info");
+  log("Starting Create Family Test...", "info");
+  
+  if (!window.db) {
+    log("❌ Firebase not initialized! Check config and reload.", "error");
+    return;
+  }
+
+  if (!name || !famName || !code) {
+    log("❌ All fields required!", "error");
+    return;
+  }
+
+  if (pin.length !== 4) {
+    log("❌ PIN must be 4 digits! Current: " + pin.length, "error");
+    return;
+  }
+
+  log("✓ Form validation passed", "info");
+  log("- Name: " + name, "info");
+  log("- Family: " + famName, "info");
+  log("- Code: " + code, "info");
+  log("- PIN hash: " + hashPin(pin), "info");
+
+  try {
+    log("Checking if code already exists...", "info");
+    const docRef = firebase.firestore.collection(window.db, "families/" + code);
+    const snap = await firebase.firestore.getDocs(
+      firebase.firestore.query(docRef)
+    );
+    
+    if (snap.size > 0) {
+      log("❌ Code already exists! Try different code.", "error");
+      return;
+    }
+    log("✓ Code is unique", "info");
+
+    log("Creating family document...", "info");
+    const memberId = Date.now().toString(36) + Math.random().toString(36).slice(2);
+    const familyDoc = {
+      name: famName,
+      code: code,
+      pinHash: hashPin(pin),
+      adminId: memberId,
+      createdAt: new Date().toISOString(),
+      members: {}
+    };
+    familyDoc.members[memberId] = {
+      name: name,
+      joinedAt: new Date().toISOString(),
+      isAdmin: true
+    };
+
+    log("Document structure: " + JSON.stringify(familyDoc, null, 2), "info");
+
+    await firebase.firestore.setDoc(
+      firebase.firestore.doc(window.db, "families", code),
+      familyDoc
+    );
+
+    log("✅ FAMILY CREATED SUCCESSFULLY!", "success");
+    log("Family Code: " + code, "success");
+    log("PIN Hash: " + hashPin(pin), "success");
+    log("Member ID: " + memberId, "success");
+    log("You are Admin!", "success");
+
+  } catch (e) {
+    log("❌ Error: " + e.code, "error");
+    log("Message: " + e.message, "error");
+    log("Full error: " + JSON.stringify(e), "error");
+  }
+}
+
+function log(msg, type = "info") {
+  const el = document.getElementById('status');
+  if (!msg) {
+    el.innerHTML = '';
+    return;
+  }
+  const line = document.createElement('div');
+  line.textContent = msg;
+  line.style.marginBottom = '5px';
+  if (type === 'error') line.style.color = '#d32f2f';
+  else if (type === 'success') line.style.color = '#388e3c';
+  el.appendChild(line);
+  el.scrollTop = el.scrollHeight;
+}
+
+// Also log to browser console
+console.log("DEBUG MODE ACTIVE");
+console.log("FirebaseConfig:", firebaseConfig);
+</script>
+</body>
+</html>
