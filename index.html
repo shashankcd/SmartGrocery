@@ -1010,25 +1010,48 @@ function showPickFromItems(){
 }
 
 // ===================== BOOT =====================
-document.addEventListener('DOMContentLoaded',()=>{
+document.addEventListener('DOMContentLoaded', async ()=>{
+
   loadSession();
-  document.addEventListener('firebaseReady',()=>{
-    if(session?.familyCode){
-      document.getElementById('ob-ov').style.display='none';
-      document.getElementById('fam-ov').style.display='none';
-      setLang(lang);
-      initApp();
-    } else {
-      document.getElementById('ob-ov').style.display='flex';
+
+  while(!window._firebaseReady){
+    await new Promise(r=>setTimeout(r,100));
+  }
+
+  if(session?.familyCode){
+    document.getElementById('ob-ov').style.display='none';
+
+    const famOv=document.getElementById('fam-ov');
+    if(famOv) famOv.style.display='none';
+
+    setLang(lang);
+    initApp();
+  } else {
+    document.getElementById('ob-ov').style.display='flex';
+  }
+
+  const fab=document.getElementById('main-fab');
+
+  fab.addEventListener('click',()=>{
+
+    const activePage=document.querySelector('.page.active');
+    if(!activePage) return;
+
+    if(activePage.id==='page-list'){
+      if(!activeTrip){
+        openNewTrip();
+      }else{
+        showPickFromItems();
+      }
     }
-    document.getElementById('main-fab').addEventListener('click',()=>{
-      const p=document.querySelector('.page.active').id;
-      if(p==='page-list'){if(!activeTrip)openNewTrip();else showPickFromItems();}
-      else openAddItem();
-    });
-    // PIN box setup for change modal
-    setupPinBoxes('cur-pin-wrap');setupPinBoxes('new-pin-wrap');
+    else if(activePage.id==='page-items'){
+      openAddItem();
+    }
   });
+
+  setupPinBoxes('cur-pin-wrap');
+  setupPinBoxes('new-pin-wrap');
+});
 });
 </script>
 </body>
